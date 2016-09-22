@@ -46,7 +46,7 @@ func operate(method string, args ...interface{}) *redis.Resp {
 	conn, err := p.Get()
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		os.Exit(0)
 	}
 	defer p.Put(conn)
 	return conn.Cmd(method, args...)

@@ -20,8 +20,10 @@ func (z *tZset) ZCOUNT(key, start, stop string) *redis.Resp {
 }
 
 // ZINCRBY 为有序集 key 的成员 member 的 score 值加上增量 increment 。
-func (z *tZset) ZINCRBY(key string, value int) *redis.Resp {
-	return operate("ZINCRBY", key, value)
+func (z *tZset) ZINCRBY(key string, value ...interface{}) *redis.Resp {
+	args := []interface{}{key}
+	args = append(args, value...)
+	return operate("ZINCRBY", args...)
 }
 
 // ZRANGE 返回有序集 key 中，指定区间内的成员。
