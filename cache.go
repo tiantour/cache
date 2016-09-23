@@ -29,6 +29,7 @@ var (
 	List   = &tList{}
 	Set    = &tSet{}
 	Zset   = &tZset{}
+	Pipe   = &tPipe{}
 )
 
 // redis type
@@ -39,6 +40,7 @@ type (
 	tList   struct{}
 	tSet    struct{}
 	tZset   struct{}
+	tPipe   struct{}
 )
 
 //Operate 操作
