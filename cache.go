@@ -8,12 +8,14 @@ import (
 	"github.com/mediocregopher/radix.v2/redis"
 )
 
+// cache
 var (
-	p, err = newPool()
+	p, err = new()
+	Conn   = conn()
 )
 
-// newPool 链接池
-func newPool() (p *pool.Pool, err error) {
+// new 链接池
+func new() (p *pool.Pool, err error) {
 	df := func(network, addr string) (client *redis.Client, err error) {
 		client, err = redis.Dial(network, addr)
 		return
@@ -30,6 +32,7 @@ var (
 	Set    = &tSet{}
 	Zset   = &tZset{}
 	Pipe   = &tPipe{}
+	Lua    = &tLua{}
 )
 
 // redis type
@@ -41,15 +44,21 @@ type (
 	tSet    struct{}
 	tZset   struct{}
 	tPipe   struct{}
+	tLua    struct{}
 )
 
-//Operate 操作
-func operate(method string, args ...interface{}) *redis.Resp {
+// conn
+func conn() *redis.Client {
 	conn, err := p.Get()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 	defer p.Put(conn)
-	return conn.Cmd(method, args...)
+	return conn
+}
+
+// operate
+func operate(cmd string, args ...interface{}) *redis.Resp {
+	return Conn.Cmd(cmd, args...)
 }
