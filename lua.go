@@ -7,5 +7,10 @@ import (
 
 // Eval
 func (l *tLua) Eval(script string, keys int, args ...interface{}) *redis.Resp {
-	return util.LuaEval(Conn, script, keys, args)
+	conn, err := p.Get()
+	if err != nil {
+		return redis.NewResp(err)
+	}
+	defer p.Put(conn)
+	return util.LuaEval(conn, script, keys, args)
 }
