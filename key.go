@@ -73,8 +73,8 @@ func (k *tKey) RANDOMKEY(key string) *redis.Resp {
 }
 
 // RENAME 将给定 key 改名为 newkey 。
-func (k *tKey) RENAME(key string) *redis.Resp {
-	return operate("RENAME", key)
+func (k *tKey) RENAME(key, newKey string) *redis.Resp {
+	return operate("RENAME", key, newKey)
 }
 
 // RENAMENX 当且仅当 newkey 不存在时，将 key 改名为 newkey 。
