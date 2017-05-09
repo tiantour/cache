@@ -1,8 +1,11 @@
 package cache
 
 import (
+	"fmt"
+
 	"github.com/mediocregopher/radix.v2/pool"
 	"github.com/mediocregopher/radix.v2/redis"
+	"github.com/tiantour/conf"
 )
 
 var (
@@ -14,7 +17,8 @@ func new() (*pool.Pool, error) {
 	df := func(network, addr string) (*redis.Client, error) {
 		return redis.Dial(network, addr)
 	}
-	return pool.NewCustom("tcp", "127.0.0.1:6379", 10, df)
+	account := fmt.Sprintf("%s:%s", conf.Data.Cache.Host, conf.Data.Cache.Port)
+	return pool.NewCustom("tcp", account, 10, df)
 }
 
 // init type
