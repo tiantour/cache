@@ -5,8 +5,16 @@ import (
 	"github.com/mediocregopher/radix.v2/util"
 )
 
-// Eval
-func (l *tLua) Eval(script string, keys int, args ...interface{}) *redis.Resp {
+// Lua lua
+type Lua struct{}
+
+// NewLua new lua
+func NewLua() *Lua {
+	return &Lua{}
+}
+
+// Eval eval
+func (l Lua) Eval(script string, keys int, args ...interface{}) *redis.Resp {
 	conn, err := p.Get()
 	if err != nil {
 		return redis.NewResp(err)
