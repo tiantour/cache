@@ -4,7 +4,7 @@ opreate redis with go
 # conf 
 
     cache.IP = "your ip default 127.0.0.1"
-    cache.Port = "your port default 6379"
+    cache.Port = "your port default :6379"
 
 # Hash
 

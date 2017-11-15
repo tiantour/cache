@@ -8,8 +8,10 @@ import (
 )
 
 var (
-	IP     = "127.0.0.1"
-	Port   = "6379"
+	// IP ip
+	IP = "127.0.0.1"
+	// Port port
+	Port   = ":6379"
 	p, err = new()
 )
 
@@ -18,7 +20,7 @@ func new() (*pool.Pool, error) {
 	df := func(network, addr string) (*redis.Client, error) {
 		return redis.Dial(network, addr)
 	}
-	account := fmt.Sprintf("%s:%s", IP, Port)
+	account := fmt.Sprintf("%s%s", IP, Port)
 	return pool.NewCustom("tcp", account, 10, df)
 }
 
