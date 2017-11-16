@@ -15,10 +15,10 @@ func NewLua() *Lua {
 
 // Eval eval
 func (l Lua) Eval(script string, keys int, args ...interface{}) *redis.Resp {
-	conn, err := p.Get()
+	conn, err := po.Get()
 	if err != nil {
 		return redis.NewResp(err)
 	}
-	defer p.Put(conn)
+	defer po.Put(conn)
 	return util.LuaEval(conn, script, keys, args)
 }

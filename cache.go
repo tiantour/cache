@@ -8,28 +8,34 @@ import (
 )
 
 var (
-	// IP ip
-	IP = "127.0.0.1"
-	// Port port
-	Port   = ":6379"
-	p, err = new()
+	po  *pool.Pool
+	err error
 )
 
-// new pool
-func new() (*pool.Pool, error) {
+// New new cache
+func New(ip, port string) {
+	if ip == "" {
+		ip = "127.0.0.1"
+	}
+	if port == "" {
+		port = ":6379"
+	}
 	df := func(network, addr string) (*redis.Client, error) {
 		return redis.Dial(network, addr)
 	}
-	account := fmt.Sprintf("%s%s", IP, Port)
-	return pool.NewCustom("tcp", account, 10, df)
+	po, err = pool.NewCustom("tcp",
+		fmt.Sprintf("%s%s", ip, port),
+		10,
+		df,
+	)
 }
 
 // operate redis
 func operate(cmd string, args ...interface{}) *redis.Resp {
-	conn, err := p.Get()
+	conn, err := po.Get()
 	if err != nil {
 		return redis.NewResp(err)
 	}
-	defer p.Put(conn)
+	defer po.Put(conn)
 	return conn.Cmd(cmd, args...)
 }
