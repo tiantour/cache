@@ -5,6 +5,7 @@ import (
 
 	"github.com/mediocregopher/radix.v2/pool"
 	"github.com/mediocregopher/radix.v2/redis"
+	"github.com/tiantour/conf"
 )
 
 var (
@@ -12,19 +13,19 @@ var (
 	err error
 )
 
-// New new cache
-func New(ip, port string) {
-	if ip == "" {
-		ip = "127.0.0.1"
+func init() {
+	c := conf.NewConf().Cache
+	if c.IP == "" {
+		c.IP = "127.0.0.1"
 	}
-	if port == "" {
-		port = ":6379"
+	if c.Port == "" {
+		c.Port = ":6379"
 	}
 	df := func(network, addr string) (*redis.Client, error) {
 		return redis.Dial(network, addr)
 	}
 	po, err = pool.NewCustom("tcp",
-		fmt.Sprintf("%s%s", ip, port),
+		fmt.Sprintf("%s%s", c.IP, c.Port),
 		10,
 		df,
 	)
