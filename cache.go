@@ -24,8 +24,7 @@ func init() {
 	df := func(network, addr string) (*redis.Client, error) {
 		return redis.Dial(network, addr)
 	}
-	po, err = pool.NewCustom("tcp",
-		fmt.Sprintf("%s%s", c.IP, c.Port),
+	po, err = pool.NewCustom("tcp", fmt.Sprintf("%s%s", c.IP, c.Port),
 		10,
 		df,
 	)

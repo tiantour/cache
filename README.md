@@ -29,7 +29,3 @@ opreate redis with go
 # Key
 
     cache.NewKey().XYZ()
-
-# Lua
-
-    cache.NewLua().XYZ()
