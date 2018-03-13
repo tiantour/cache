@@ -23,8 +23,8 @@ O(N)， N 为要删除的域的数量。
 返回值:
 被成功移除的域的数量，不包括被忽略的域。
 */
-func (h *Hash) HDEL(key string, field interface{}, args ...interface{}) *redis.Resp {
-	return operate("HDEL", key, field, args)
+func (h *Hash) HDEL(key string, field ...interface{}) *redis.Resp {
+	return operate("HDEL", key, field)
 }
 
 /*
@@ -180,8 +180,8 @@ O(N)， N 为给定域的数量。
 返回值：
 一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。
 */
-func (h *Hash) HMGET(key string, field interface{}, args ...interface{}) *redis.Resp {
-	return operate("HMGET", key, field, args)
+func (h *Hash) HMGET(key string, field ...interface{}) *redis.Resp {
+	return operate("HMGET", key, field)
 }
 
 /*
@@ -201,8 +201,8 @@ O(N)， N 为 field-value 对的数量。
 如果命令执行成功，返回 OK 。
 当 key 不是哈希表(hash)类型时，返回一个错误。
 */
-func (h *Hash) HMSET(key string, field, value interface{}, args ...interface{}) *redis.Resp {
-	return operate("HMSET", key, field, value, args)
+func (h *Hash) HMSET(key string, args ...interface{}) *redis.Resp {
+	return operate("HMSET", key, args)
 }
 
 /*

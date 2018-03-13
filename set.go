@@ -27,8 +27,8 @@ O(N)， N 是被添加的元素的数量。
 返回值:
 被添加到集合中的新元素的数量，不包括被忽略的元素。
 */
-func (s *Set) SADD(key string, member interface{}, args ...interface{}) *redis.Resp {
-	return operate("SADD", key, member, args)
+func (s *Set) SADD(key string, member ...interface{}) *redis.Resp {
+	return operate("SADD", key, member)
 }
 
 /*
@@ -62,8 +62,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 一个包含差集成员的列表。
 */
-func (s *Set) SDIFF(key string, args ...string) *redis.Resp {
-	return operate("SDIFF", key, args)
+func (s *Set) SDIFF(key ...string) *redis.Resp {
+	return operate("SDIFF", key)
 }
 
 /*
@@ -82,8 +82,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 结果集中的元素数量。
 */
-func (s *Set) SDIFFSTORE(destination, key string, args ...string) *redis.Resp {
-	return operate("SDIFFSTORE", destination, key, args)
+func (s *Set) SDIFFSTORE(destination string, key ...string) *redis.Resp {
+	return operate("SDIFFSTORE", destination, key)
 }
 
 /*
@@ -102,8 +102,8 @@ O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的
 返回值:
 交集成员的列表。
 */
-func (s *Set) SINTER(key string, args ...string) *redis.Resp {
-	return operate("SINTER", key, args)
+func (s *Set) SINTER(key ...string) *redis.Resp {
+	return operate("SINTER", key)
 }
 
 /*
@@ -122,8 +122,8 @@ O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的
 返回值:
 结果集中的成员数量。
 */
-func (s *Set) SINTERSTORE(destination, key string, args ...string) *redis.Resp {
-	return operate("SINTERSTORE", destination, key, args)
+func (s *Set) SINTERSTORE(destination string, key ...string) *redis.Resp {
+	return operate("SINTERSTORE", destination, key)
 }
 
 /*
@@ -246,8 +246,8 @@ O(N)， N 为给定 member 元素的数量。
 返回值:
 被成功移除的元素的数量，不包括被忽略的元素。
 */
-func (s *Set) SREM(key string, member interface{}, args ...interface{}) *redis.Resp {
-	return operate("SREM", key, member, args)
+func (s *Set) SREM(key string, member ...interface{}) *redis.Resp {
+	return operate("SREM", key, member)
 }
 
 /*
@@ -264,8 +264,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 并集成员的列表。
 */
-func (s *Set) SUNION(key string, args ...string) *redis.Resp {
-	return operate("SUNION", key, args)
+func (s *Set) SUNION(key ...string) *redis.Resp {
+	return operate("SUNION", key)
 }
 
 /*
@@ -284,8 +284,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 结果集中的元素数量。
 */
-func (s *Set) SUNIONSTORE(destination, key string, args ...string) *redis.Resp {
-	return operate("SUNIONSTORE", destination, key, args)
+func (s *Set) SUNIONSTORE(destination string, key ...string) *redis.Resp {
+	return operate("SUNIONSTORE", destination, key)
 }
 
 /*

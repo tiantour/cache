@@ -31,8 +31,8 @@ BLPOP job command request 0
 
 BLPOP 保证返回的元素来自 command ，因为它是按”查找 job -> 查找 command -> 查找 request “这样的顺序，第一个找到的非空列表。
 */
-func (l *List) BLPOP(key string, timeout int, args ...string) *redis.Resp {
-	return operate("BLPOP", key, args, timeout)
+func (l *List) BLPOP(timeout int, key ...string) *redis.Resp {
+	return operate("BLPOP", key, timeout)
 }
 
 /*
@@ -54,8 +54,8 @@ O(1)
 假如在指定时间内没有任何元素被弹出，则返回一个 nil 和等待时长。
 反之，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 */
-func (l *List) BRPOP(key string, timeout int, args ...string) *redis.Resp {
-	return operate("BRPOP", key, args, timeout)
+func (l *List) BRPOP(timeout int, key ...string) *redis.Resp {
+	return operate("BRPOP", key, timeout)
 }
 
 /*
@@ -186,8 +186,8 @@ O(1)
 返回值：
 执行 LPUSH 命令后，列表的长度。
 */
-func (l *List) LPUSH(key string, value interface{}, args ...interface{}) *redis.Resp {
-	return operate("LPUSH", key, value, args)
+func (l *List) LPUSH(key string, value ...interface{}) *redis.Resp {
+	return operate("LPUSH", key, value)
 }
 
 /*
@@ -204,8 +204,8 @@ O(1)
 返回值：
 LPUSHX 命令执行之后，表的长度。
 */
-func (l *List) LPUSHX(key string, value interface{}, args ...interface{}) *redis.Resp {
-	return operate("LPUSHX", key, value, args)
+func (l *List) LPUSHX(key string, value interface{}) *redis.Resp {
+	return operate("LPUSHX", key, value)
 }
 
 /*
@@ -385,8 +385,8 @@ O(1)
 返回值：
 执行 RPUSH 操作后，表的长度。
 */
-func (l *List) RPUSH(key string, value interface{}, args ...interface{}) *redis.Resp {
-	return operate("RPUSH", key, value, args)
+func (l *List) RPUSH(key string, value ...interface{}) *redis.Resp {
+	return operate("RPUSH", key, value)
 }
 
 /*

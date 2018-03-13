@@ -26,8 +26,8 @@ O(N)， N 为被删除的 key 的数量。
 返回值：
 被删除 key 的数量。
 */
-func (k *Key) DEL(key string, args ...interface{}) *redis.Resp {
-	return operate("DEL", key, args)
+func (k *Key) DEL(key ...interface{}) *redis.Resp {
+	return operate("DEL", key)
 }
 
 /*

@@ -79,8 +79,8 @@ O(N)
 保存到 destkey 的字符串的长度，和输入 key 中最长的字符串长度相等。
 BITOP 的复杂度为 O(N) ，当处理大型矩阵(matrix)或者进行大数据量的统计时，最好将任务指派到附属节点(slave)进行，避免阻塞主节点。
 */
-func (s *String) BITOP(operation, destKey, key string, args ...string) *redis.Resp {
-	return operate("BITOP", operation, destKey, key, args)
+func (s *String) BITOP(operation, destKey string, key ...string) *redis.Resp {
+	return operate("BITOP", operation, destKey, key)
 }
 
 /*
@@ -311,8 +311,8 @@ O(N) , N 为给定 key 的数量。
 返回值：
 一个包含所有给定 key 的值的列表。
 */
-func (s *String) MGET(key string, args ...string) *redis.Resp {
-	return operate("MGET", key, args)
+func (s *String) MGET(key ...string) *redis.Resp {
+	return operate("MGET", key)
 }
 
 /*
@@ -331,8 +331,8 @@ O(N)， N 为要设置的 key 数量。
 返回值：
 总是返回 OK (因为 MSET 不可能失败)
 */
-func (s *String) MSET(key string, value interface{}, args ...interface{}) *redis.Resp {
-	return operate("MSET", key, value, args)
+func (s *String) MSET(args ...interface{}) *redis.Resp {
+	return operate("MSET", args)
 }
 
 /*
@@ -352,8 +352,8 @@ O(N)， N 为要设置的 key 的数量。
 当所有 key 都成功设置，返回 1 。
 如果所有给定 key 都设置失败(至少有一个 key 已经存在)，那么返回 0 。
 */
-func (s *String) MSETNX(key string, value interface{}, args ...interface{}) *redis.Resp {
-	return operate("MSETNX", key, value, args)
+func (s *String) MSETNX(args ...interface{}) *redis.Resp {
+	return operate("MSETNX", args)
 }
 
 /*
@@ -400,7 +400,7 @@ O(1)
 从 Redis 2.6.12 版本开始， SET 在设置操作成功完成时，才返回 OK 。
 如果设置了 NX 或者 XX ，但因为条件没达到而造成设置操作未执行，那么命令返回空批量回复（NULL Bulk Reply）。
 */
-func (s *String) SET(key, value interface{}, args ...interface{}) (resp *redis.Resp) {
+func (s *String) SET(key string, value interface{}, args ...interface{}) (resp *redis.Resp) {
 	return operate("SET", key, value, args)
 }
 
