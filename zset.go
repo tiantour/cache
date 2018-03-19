@@ -263,7 +263,7 @@ O(log(N)+M)， N 为有序集的基数， M 为结果集的基数。
 指定区间内，带有 score 值(可选)的有序集成员的列表。
 */
 func (z *Zset) ZREVRANGEBYSCORE(key string, max, min interface{}, args ...interface{}) *redis.Resp {
-	return operate("ZREVRANGEBYSCORE", max, min, args)
+	return operate("ZREVRANGEBYSCORE", key, max, min, args)
 }
 
 /*
