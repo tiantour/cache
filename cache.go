@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	c := conf.NewConf().Cache
+	c := conf.NewCache().Data
 	if c.IP == "" {
 		c.IP = "127.0.0.1"
 	}
