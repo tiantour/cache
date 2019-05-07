@@ -1,6 +1,6 @@
 package cache
 
-import "github.com/mediocregopher/radix.v2/redis"
+import "strconv"
 
 // List list
 type List struct{}
@@ -31,8 +31,9 @@ BLPOP job command request 0
 
 BLPOP 保证返回的元素来自 command ，因为它是按”查找 job -> 查找 command -> 查找 request “这样的顺序，第一个找到的非空列表。
 */
-func (l *List) BLPOP(timeout int, key ...string) *redis.Resp {
-	return operate("BLPOP", key, timeout)
+func (l *List) BLPOP(result interface{}, timeout int, key ...string) error {
+	key = append(key, strconv.Itoa(timeout))
+	return operateS(result, "BLPOP", key...)
 }
 
 /*
@@ -54,8 +55,9 @@ O(1)
 假如在指定时间内没有任何元素被弹出，则返回一个 nil 和等待时长。
 反之，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 */
-func (l *List) BRPOP(timeout int, key ...string) *redis.Resp {
-	return operate("BRPOP", key, timeout)
+func (l *List) BRPOP(result interface{}, timeout int, key ...string) error {
+	key = append(key, strconv.Itoa(timeout))
+	return operateS(result, "BRPOP", key...)
 }
 
 /*
@@ -78,8 +80,8 @@ O(1)
 反之，返回一个含有两个元素的列表，第一个元素是被弹出元素的值，第二个元素是等待时长。
 
 */
-func (l *List) BRPOPLPUSH(source, destination string, timeout int) *redis.Resp {
-	return operate("BRPOPLPUSH", source, destination, timeout)
+func (l *List) BRPOPLPUSH(result interface{}, source, destination string, timeout int) error {
+	return operate(result, "BRPOPLPUSH", source, destination, timeout)
 }
 
 /*
@@ -102,8 +104,8 @@ O(N)， N 为到达下标 index 过程中经过的元素数量。
 列表中下标为 index 的元素。
 如果 index 参数的值不在列表的区间范围内(out of range)，返回 nil 。
 */
-func (l *List) LINDEX(key string, index int) *redis.Resp {
-	return operate("LINDEX", key, index)
+func (l *List) LINDEX(result interface{}, key string, index int) error {
+	return operate(result, "LINDEX", key, index)
 }
 
 /*
@@ -126,8 +128,8 @@ O(N)， N 为寻找 pivot 过程中经过的元素数量。
 如果没有找到 pivot ，返回 -1 。
 如果 key 不存在或为空列表，返回 0 。
 */
-func (l *List) LINSERT(key, operation, pivot, value string) *redis.Resp {
-	return operate("LINSERT", key, operation, pivot, value)
+func (l *List) LINSERT(result interface{}, key, operation, pivot, value string) error {
+	return operate(result, "LINSERT", key, operation, pivot, value)
 }
 
 /*
@@ -146,8 +148,8 @@ O(1)
 返回值：
 列表 key 的长度。
 */
-func (l *List) LLEN(key string) *redis.Resp {
-	return operate("LLEN", key)
+func (l *List) LLEN(result interface{}, key string) error {
+	return operate(result, "LLEN", key)
 }
 
 /*
@@ -163,8 +165,8 @@ O(1)
 列表的头元素。
 当 key 不存在时，返回 nil 。
 */
-func (l *List) LPOP(key string) *redis.Resp {
-	return operate("LPOP", key)
+func (l *List) LPOP(result interface{}, key string) error {
+	return operate(result, "LPOP", key)
 }
 
 /*
@@ -186,8 +188,8 @@ O(1)
 返回值：
 执行 LPUSH 命令后，列表的长度。
 */
-func (l *List) LPUSH(key string, value ...interface{}) *redis.Resp {
-	return operate("LPUSH", key, value)
+func (l *List) LPUSH(result interface{}, key string, value ...interface{}) error {
+	return operate(result, "LPUSH", key, value)
 }
 
 /*
@@ -204,8 +206,8 @@ O(1)
 返回值：
 LPUSHX 命令执行之后，表的长度。
 */
-func (l *List) LPUSHX(key string, value interface{}) *redis.Resp {
-	return operate("LPUSHX", key, value)
+func (l *List) LPUSHX(result interface{}, key string, value interface{}) error {
+	return operate(result, "LPUSHX", key, value)
 }
 
 /*
@@ -236,8 +238,8 @@ O(S+N)， S 为偏移量 start ， N 为指定区间内元素的数量。
 返回值:
 一个列表，包含指定区间内的元素。
 */
-func (l *List) LRANGE(key string, start, stop int) *redis.Resp {
-	return operate("LRANGE", key, start, stop)
+func (l *List) LRANGE(result interface{}, key string, start, stop int) error {
+	return operate(result, "LRANGE", key, start, stop)
 }
 
 /*
@@ -258,8 +260,8 @@ O(N)， N 为列表的长度。
 被移除元素的数量。
 因为不存在的 key 被视作空表(empty list)，所以当 key 不存在时， LREM 命令总是返回 0 。
 */
-func (l *List) LREM(key string, count int, value string) *redis.Resp {
-	return operate("LREM", key, count, value)
+func (l *List) LREM(result interface{}, key string, count int, value string) error {
+	return operate(result, "LREM", key, count, value)
 }
 
 /*
@@ -279,8 +281,8 @@ LSET key index value
 返回值：
 操作成功返回 ok ，否则返回错误信息。
 */
-func (l *List) LSET(key string, index int, value string) *redis.Resp {
-	return operate("LSET", key, index, value)
+func (l *List) LSET(result interface{}, key string, index int, value string) error {
+	return operate(result, "LSET", key, index, value)
 }
 
 /*
@@ -321,8 +323,8 @@ O(N)， N 为被移除的元素的数量。
 返回值:
 命令执行成功时，返回 ok 。
 */
-func (l *List) LTRIM(key string, start, stop int) *redis.Resp {
-	return operate("LTRIM", key, start, stop)
+func (l *List) LTRIM(result interface{}, key string, start, stop int) error {
+	return operate(result, "LTRIM", key, start, stop)
 }
 
 /*
@@ -338,8 +340,8 @@ O(1)
 列表的尾元素。
 当 key 不存在时，返回 nil 。
 */
-func (l *List) RPOP(key string) *redis.Resp {
-	return operate("RPOP", key)
+func (l *List) RPOP(result interface{}, key string) error {
+	return operate(result, "RPOP", key)
 }
 
 /*
@@ -362,8 +364,8 @@ O(1)
 返回值：
 被弹出的元素。
 */
-func (l *List) RPOPLPUSH(source, destination string) *redis.Resp {
-	return operate("RPOPLPUSH", source, destination)
+func (l *List) RPOPLPUSH(result interface{}, source, destination string) error {
+	return operate(result, "RPOPLPUSH", source, destination)
 }
 
 /*
@@ -385,8 +387,8 @@ O(1)
 返回值：
 执行 RPUSH 操作后，表的长度。
 */
-func (l *List) RPUSH(key string, value ...interface{}) *redis.Resp {
-	return operate("RPUSH", key, value)
+func (l *List) RPUSH(result interface{}, key string, value ...interface{}) error {
+	return operate(result, "RPUSH", key, value)
 }
 
 /*
@@ -403,6 +405,6 @@ O(1)
 返回值：
 RPUSHX 命令执行之后，表的长度。
 */
-func (l *List) RPUSHX(key string, value interface{}) *redis.Resp {
-	return operate("RPUSHX", key, value)
+func (l *List) RPUSHX(result interface{}, key string, value interface{}) error {
+	return operate(result, "RPUSHX", key, value)
 }

@@ -1,7 +1,5 @@
 package cache
 
-import "github.com/mediocregopher/radix.v2/redis"
-
 // Key key
 type Key struct{}
 
@@ -26,8 +24,8 @@ O(N)， N 为被删除的 key 的数量。
 返回值：
 被删除 key 的数量。
 */
-func (k *Key) DEL(key ...interface{}) *redis.Resp {
-	return operate("DEL", key)
+func (k *Key) DEL(result interface{}, key ...string) error {
+	return operateS(result, "DEL", key...)
 }
 
 /*
@@ -51,8 +49,8 @@ RDB 版本会被编码在序列化值当中，如果因为 Redis 的版本不同
 如果 key 不存在，那么返回 nil 。
 否则，返回序列化之后的值。
 */
-func (k *Key) DUMP(key string) *redis.Resp {
-	return operate("DUMP", key)
+func (k *Key) DUMP(result interface{}, key string) error {
+	return operate(result, "DUMP", key)
 }
 
 /*
@@ -67,8 +65,8 @@ O(1)
 返回值：
 若 key 存在，返回 1 ，否则返回 0 。
 */
-func (k *Key) EXISTS(key string) *redis.Resp {
-	return operate("EXISTS", key)
+func (k *Key) EXISTS(result interface{}, key string) error {
+	return operate(result, "EXISTS", key)
 }
 
 /*
@@ -108,8 +106,8 @@ O(1)
 设置成功返回 1 。
 当 key 不存在或者不能为 key 设置生存时间时(比如在低于 2.1.3 版本的 Redis 中你尝试更新 key 的生存时间)，返回 0
 */
-func (k *Key) EXPIRE(key string, seconds int) *redis.Resp {
-	return operate("EXPIRE", key, seconds)
+func (k *Key) EXPIRE(result interface{}, key string, seconds int) error {
+	return operate(result, "EXPIRE", key, seconds)
 }
 
 /*
@@ -127,8 +125,8 @@ O(1)
 如果生存时间设置成功，返回 1 。
 当 key 不存在或没办法设置生存时间，返回 0 。
 */
-func (k *Key) EXPIREAT(key string, timestamp int) *redis.Resp {
-	return operate("EXPIREAT", key, timestamp)
+func (k *Key) EXPIREAT(result interface{}, key string, timestamp int) error {
+	return operate(result, "EXPIREAT", key, timestamp)
 }
 
 /*
@@ -151,8 +149,8 @@ O(N)， N 为数据库中 key 的数量。
 符合给定模式的 key 列表。
 
 */
-func (k *Key) KEYS(pattern string) *redis.Resp {
-	return operate("KEYS", pattern)
+func (k *Key) KEYS(result interface{}, pattern string) error {
+	return operate(result, "KEYS", pattern)
 }
 
 /*
@@ -188,8 +186,8 @@ key 数据在两个实例之间传输的复杂度为 O(N) 。
 返回值：
 迁移成功时返回 OK ，否则返回相应的错误。
 */
-func (k *Key) MIGRATE(host, prot, key string, destinationDB, timeout int, args ...interface{}) *redis.Resp {
-	return operate("MIGRATE", host, prot, key, destinationDB, timeout, args)
+func (k *Key) MIGRATE(result interface{}, host, prot, key string, destinationDB, timeout int, args ...interface{}) error {
+	return operate(result, "MIGRATE", host, prot, key, destinationDB, timeout, args)
 }
 
 /*
@@ -208,8 +206,8 @@ O(1)
 返回值：
 移动成功返回 1 ，失败则返回 0 。
 */
-func (k *Key) MOVE(key string, db int) *redis.Resp {
-	return operate("MOVE", key, db)
+func (k *Key) MOVE(result interface{}, key string, db int) error {
+	return operate(result, "MOVE", key, db)
 }
 
 /*
@@ -239,8 +237,8 @@ O(1)
 REFCOUNT 和 IDLETIME 返回数字。
 ENCODING 返回相应的编码类型。
 */
-func (k *Key) OBJECT(subcommand string, args ...interface{}) *redis.Resp {
-	return operate("OBJECT", subcommand, args)
+func (k *Key) OBJECT(result interface{}, subcommand string, args ...interface{}) error {
+	return operate(result, "OBJECT", subcommand, args)
 }
 
 /*
@@ -256,8 +254,8 @@ O(1)
 当生存时间移除成功时，返回 1 .
 如果 key 不存在或 key 没有设置生存时间，返回 0 。
 */
-func (k *Key) PERSIST(key string) *redis.Resp {
-	return operate("PERSIST", key)
+func (k *Key) PERSIST(result interface{}, key string) error {
+	return operate(result, "PERSIST", key)
 }
 
 /*
@@ -273,8 +271,8 @@ O(1)
 设置成功，返回 1
 key 不存在或设置失败，返回 0
 */
-func (k *Key) PEXPIRE(key string, milliseconds int) *redis.Resp {
-	return operate("PEXPIRE", key, milliseconds)
+func (k *Key) PEXPIRE(result interface{}, key string, milliseconds int) error {
+	return operate(result, "PEXPIRE", key, milliseconds)
 }
 
 /*
@@ -291,8 +289,8 @@ O(1)
 当 key 不存在或没办法设置生存时间时，返回 0 。(查看 EXPIRE 命令获取更多信息)
 
 */
-func (k *Key) PEXPIREAT(key string, millisecondsTimestamp int) *redis.Resp {
-	return operate("PEXPIREAT", key, millisecondsTimestamp)
+func (k *Key) PEXPIREAT(result interface{}, key string, millisecondsTimestamp int) error {
+	return operate(result, "PEXPIREAT", key, millisecondsTimestamp)
 }
 
 /*
@@ -311,8 +309,8 @@ O(1)
 在 Redis 2.8 以前，当 key 不存在，或者 key 没有设置剩余生存时间时，命令都返回 -1 。
 
 */
-func (k *Key) PTTL(key string) *redis.Resp {
-	return operate("PTTL", key)
+func (k *Key) PTTL(result interface{}, key string) error {
+	return operate(result, "PTTL", key)
 }
 
 /*
@@ -326,8 +324,8 @@ O(1)
 当数据库不为空时，返回一个 key 。
 当数据库为空时，返回 nil 。
 */
-func (k *Key) RANDOMKEY() *redis.Resp {
-	return operate("RANDOMKEY")
+func (k *Key) RANDOMKEY(result interface{}) error {
+	return operateS(result, "RANDOMKEY")
 }
 
 /*
@@ -346,8 +344,8 @@ O(1)
 返回值：
 改名成功时提示 OK ，失败时候返回一个错误。
 */
-func (k *Key) RENAME(key, newKey string) *redis.Resp {
-	return operate("RENAME", key, newKey)
+func (k *Key) RENAME(result interface{}, key, newKey string) error {
+	return operate(result, "RENAME", key, newKey)
 }
 
 /*
@@ -365,8 +363,8 @@ O(1)
 修改成功时，返回 1 。
 如果 newkey 已经存在，返回 0 。
 */
-func (k *Key) RENAMENX(key, newKey string) *redis.Resp {
-	return operate("RENAMENX", key, newKey)
+func (k *Key) RENAMENX(result interface{}, key, newKey string) error {
+	return operate(result, "RENAMENX", key, newKey)
 }
 
 /*
@@ -391,8 +389,8 @@ RESTORE 在执行反序列化之前会先对序列化值的 RDB 版本和数据�
 返回值：
 如果反序列化成功那么返回 OK ，否则返回一个错误。
 */
-func (k *Key) RESTORE(key string, ttl int, serializedValue string, args ...interface{}) *redis.Resp {
-	return operate("RESTORE", key, ttl, serializedValue, args)
+func (k *Key) RESTORE(result interface{}, key string, ttl int, serializedValue string, args ...interface{}) error {
+	return operate(result, "RESTORE", key, ttl, serializedValue, args)
 }
 
 /*
@@ -409,8 +407,8 @@ SORT key 返回键值从小到大排序的结果。
 SORT key DESC 返回键值从大到小排序的结果。
 假设 today_cost 列表保存了今日的开销金额， 那么可以用 SORT 命令对它进行排序：
 */
-func (k *Key) SORT(key string, args ...interface{}) *redis.Resp {
-	return operate("SORT", key, args)
+func (k *Key) SORT(result interface{}, key string, args ...interface{}) error {
+	return operate(result, "SORT", key, args)
 }
 
 /*
@@ -428,8 +426,8 @@ O(1)
 否则，以秒为单位，返回 key 的剩余生存时间。
 在 Redis 2.8 以前，当 key 不存在，或者 key 没有设置剩余生存时间时，命令都返回 -1 。
 */
-func (k *Key) TTL(key string) *redis.Resp {
-	return operate("TTL", key)
+func (k *Key) TTL(result interface{}, key string) error {
+	return operate(result, "TTL", key)
 }
 
 /*
@@ -449,8 +447,8 @@ set (集合)
 zset (有序集)
 hash (哈希表)
 */
-func (k *Key) TYPE(key string) *redis.Resp {
-	return operate("TYPE", key)
+func (k *Key) TYPE(result interface{}, key string) error {
+	return operate(result, "TYPE", key)
 }
 
 /*
@@ -476,6 +474,6 @@ SCAN 命令是一个基于游标的迭代器（cursor based iterator）： SCAN 
 当 SCAN 命令的游标参数被设置为 0 时， 服务器将开始一次新的迭代， 而当服务器向用户返回值为 0 的游标时， 表示迭代已结束。
 
 */
-func (k *Key) SCAN(key string, cursor int, args interface{}) *redis.Resp {
-	return operate("SCAN", key, cursor, args)
+func (k *Key) SCAN(result interface{}, key string, cursor int, args interface{}) error {
+	return operate(result, "SCAN", key, cursor, args)
 }

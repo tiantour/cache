@@ -3,14 +3,13 @@ package cache
 import (
 	"fmt"
 
-	"github.com/mediocregopher/radix.v2/pool"
-	"github.com/mediocregopher/radix.v2/redis"
+	"github.com/mediocregopher/radix"
 	"github.com/tiantour/conf"
 )
 
 var (
-	po  *pool.Pool
-	err error
+	client *radix.Pool
+	err    error
 )
 
 func init() {
@@ -21,21 +20,18 @@ func init() {
 	if c.Port == "" {
 		c.Port = ":6379"
 	}
-	df := func(network, addr string) (*redis.Client, error) {
-		return redis.Dial(network, addr)
+	client, err = radix.NewPool("tcp", fmt.Sprintf("%s%s", c.IP, c.Port), 10)
+	if err != nil {
+		panic(err)
 	}
-	po, err = pool.NewCustom("tcp", fmt.Sprintf("%s%s", c.IP, c.Port),
-		10,
-		df,
-	)
 }
 
 // operate redis
-func operate(cmd string, args ...interface{}) *redis.Resp {
-	conn, err := po.Get()
-	if err != nil {
-		return redis.NewResp(err)
-	}
-	defer po.Put(conn)
-	return conn.Cmd(cmd, args...)
+func operate(result interface{}, cmd, key string, args ...interface{}) error {
+	return client.Do(radix.FlatCmd(result, cmd, key, args...))
+}
+
+// operate redis
+func operateS(result interface{}, cmd string, args ...string) error {
+	return client.Do(radix.Cmd(result, cmd, args...))
 }

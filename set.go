@@ -1,7 +1,5 @@
 package cache
 
-import "github.com/mediocregopher/radix.v2/redis"
-
 // Set set
 type Set struct{}
 
@@ -27,8 +25,8 @@ O(N)， N 是被添加的元素的数量。
 返回值:
 被添加到集合中的新元素的数量，不包括被忽略的元素。
 */
-func (s *Set) SADD(key string, member ...interface{}) *redis.Resp {
-	return operate("SADD", key, member)
+func (s *Set) SADD(result interface{}, key string, member ...interface{}) error {
+	return operate(result, "SADD", key, member)
 }
 
 /*
@@ -44,8 +42,8 @@ O(1)
 集合的基数。
 当 key 不存在时，返回 0 。
 */
-func (s *Set) SCARD(key string) *redis.Resp {
-	return operate("SCARD", key)
+func (s *Set) SCARD(result interface{}, key string) error {
+	return operate(result, "SCARD", key)
 }
 
 /*
@@ -62,8 +60,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 一个包含差集成员的列表。
 */
-func (s *Set) SDIFF(key ...string) *redis.Resp {
-	return operate("SDIFF", key)
+func (s *Set) SDIFF(result interface{}, key ...string) error {
+	return operateS(result, "SDIFF", key...)
 }
 
 /*
@@ -82,8 +80,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 结果集中的元素数量。
 */
-func (s *Set) SDIFFSTORE(destination string, key ...string) *redis.Resp {
-	return operate("SDIFFSTORE", destination, key)
+func (s *Set) SDIFFSTORE(result interface{}, destination string, key ...string) error {
+	return operate(result, "SDIFFSTORE", destination, key)
 }
 
 /*
@@ -102,8 +100,8 @@ O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的
 返回值:
 交集成员的列表。
 */
-func (s *Set) SINTER(key ...string) *redis.Resp {
-	return operate("SINTER", key)
+func (s *Set) SINTER(result interface{}, key ...string) error {
+	return operateS(result, "SINTER", key...)
 }
 
 /*
@@ -122,8 +120,8 @@ O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的
 返回值:
 结果集中的成员数量。
 */
-func (s *Set) SINTERSTORE(destination string, key ...string) *redis.Resp {
-	return operate("SINTERSTORE", destination, key)
+func (s *Set) SINTERSTORE(result interface{}, destination string, key ...string) error {
+	return operate(result, "SINTERSTORE", destination, key)
 }
 
 /*
@@ -140,8 +138,8 @@ O(1)
 如果 member 元素不是集合的成员，或 key 不存在，返回 0 。
 
 */
-func (s *Set) SISMEMBER(key string, member interface{}) *redis.Resp {
-	return operate("SISMEMBER", key, member)
+func (s *Set) SISMEMBER(result interface{}, key string, member interface{}) error {
+	return operate(result, "SISMEMBER", key, member)
 }
 
 /*
@@ -158,8 +156,8 @@ O(N)， N 为集合的基数。
 返回值:
 集合中的所有成员。
 */
-func (s *Set) SMEMBERS(key string) *redis.Resp {
-	return operate("SMEMBERS", key)
+func (s *Set) SMEMBERS(result interface{}, key string) error {
+	return operate(result, "SMEMBERS", key)
 }
 
 /*
@@ -184,8 +182,8 @@ O(1)
 如果 member 元素不是 source 集合的成员，并且没有任何操作对 destination 集合执行，那么返回 0 。
 
 */
-func (s *Set) SMOVE(source, destination string, member interface{}) *redis.Resp {
-	return operate("SMOVE", source, destination, member)
+func (s *Set) SMOVE(result interface{}, source, destination string, member interface{}) error {
+	return operate(result, "SMOVE", source, destination, member)
 }
 
 /*
@@ -203,8 +201,8 @@ O(1)
 被移除的随机元素。
 当 key 不存在或 key 是空集时，返回 nil 。
 */
-func (s *Set) SPOP(key string) *redis.Resp {
-	return operate("SPOP", key)
+func (s *Set) SPOP(result interface{}, key string) error {
+	return operate(result, "SPOP", key)
 }
 
 /*
@@ -227,8 +225,8 @@ SRANDMEMBER key [count]
 只提供 key 参数时，返回一个元素；如果集合为空，返回 nil 。
 如果提供了 count 参数，那么返回一个数组；如果集合为空，返回空数组。
 */
-func (s *Set) SRANDMEMBER(key string, args interface{}) *redis.Resp {
-	return operate("SRANDMEMBER", key, args)
+func (s *Set) SRANDMEMBER(result interface{}, key string, args interface{}) error {
+	return operate(result, "SRANDMEMBER", key, args)
 }
 
 /*
@@ -246,8 +244,8 @@ O(N)， N 为给定 member 元素的数量。
 返回值:
 被成功移除的元素的数量，不包括被忽略的元素。
 */
-func (s *Set) SREM(key string, member ...interface{}) *redis.Resp {
-	return operate("SREM", key, member)
+func (s *Set) SREM(result interface{}, key string, member ...interface{}) error {
+	return operate(result, "SREM", key, member)
 }
 
 /*
@@ -264,8 +262,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 并集成员的列表。
 */
-func (s *Set) SUNION(key ...string) *redis.Resp {
-	return operate("SUNION", key)
+func (s *Set) SUNION(result interface{}, key ...string) error {
+	return operateS(result, "SUNION", key...)
 }
 
 /*
@@ -284,8 +282,8 @@ O(N)， N 是所有给定集合的成员数量之和。
 返回值:
 结果集中的元素数量。
 */
-func (s *Set) SUNIONSTORE(destination string, key ...string) *redis.Resp {
-	return operate("SUNIONSTORE", destination, key)
+func (s *Set) SUNIONSTORE(result interface{}, destination string, key ...string) error {
+	return operate(result, "SUNIONSTORE", destination, key)
 }
 
 /*
@@ -294,6 +292,6 @@ SSCAN key cursor [MATCH pattern] [COUNT count]
 详细信息请参考 SCAN 命令。
 
 */
-func (s *Set) SSCAN(key string, cursor int, args ...interface{}) *redis.Resp {
-	return operate("SSCAN", key, cursor, args)
+func (s *Set) SSCAN(result interface{}, key string, cursor int, args ...interface{}) error {
+	return operate(result, "SSCAN", key, cursor, args)
 }

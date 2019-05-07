@@ -1,7 +1,5 @@
 package cache
 
-import "github.com/mediocregopher/radix.v2/redis"
-
 // Zset zset
 type Zset struct{}
 
@@ -33,8 +31,8 @@ O(M*log(N))， N 是有序集的基数， M 为成功添加的新成员的数量
 返回值:
 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员。
 */
-func (z *Zset) ZADD(key string, args ...interface{}) *redis.Resp {
-	return operate("ZADD", key, args)
+func (z *Zset) ZADD(result interface{}, key string, args ...interface{}) error {
+	return operate(result, "ZADD", key, args)
 }
 
 /*
@@ -50,8 +48,8 @@ O(1)
 当 key 存在且是有序集类型时，返回有序集的基数。
 当 key 不存在时，返回 0 。
 */
-func (z *Zset) ZCARD(key string) *redis.Resp {
-	return operate("ZCARD", key)
+func (z *Zset) ZCARD(result interface{}, key string) error {
+	return operate(result, "ZCARD", key)
 }
 
 /*
@@ -68,8 +66,8 @@ O(log(N))， N 为有序集的基数。
 返回值:
 score 值在 min 和 max 之间的成员的数量。
 */
-func (z *Zset) ZCOUNT(key string, min, max interface{}) *redis.Resp {
-	return operate("ZCOUNT", key, min, max)
+func (z *Zset) ZCOUNT(result interface{}, key string, min, max interface{}) error {
+	return operate(result, "ZCOUNT", key, min, max)
 }
 
 /*
@@ -92,8 +90,8 @@ O(log(N))
 返回值:
 member 成员的新 score 值，以字符串形式表示。
 */
-func (z *Zset) ZINCRBY(key string, increment int, member interface{}) *redis.Resp {
-	return operate("ZINCRBY", key, increment, member)
+func (z *Zset) ZINCRBY(result interface{}, key string, increment int, member interface{}) error {
+	return operate(result, "ZINCRBY", key, increment, member)
 }
 
 /*
@@ -121,8 +119,8 @@ O(log(N)+M)， N 为有序集的基数，而 M 为结果集的基数。
 返回值:
 指定区间内，带有 score 值(可选)的有序集成员的列表。
 */
-func (z *Zset) ZRANGE(key string, start, stop int, args ...interface{}) *redis.Resp {
-	return operate("ZRANGE", key, start, stop, args)
+func (z *Zset) ZRANGE(result interface{}, key string, start, stop int, args ...interface{}) error {
+	return operate(result, "ZRANGE", key, start, stop, args)
 }
 
 /*
@@ -144,8 +142,8 @@ min 和 max 可以是 -inf 和 +inf ，这样一来，你就可以在不知道�
 
 
 */
-func (z *Zset) ZRANGEBYSCORE(key string, min, max interface{}, args ...interface{}) *redis.Resp {
-	return operate("ZRANGEBYSCORE", key, min, max, args)
+func (z *Zset) ZRANGEBYSCORE(result interface{}, key string, min, max interface{}, args ...interface{}) error {
+	return operate(result, "ZRANGEBYSCORE", key, min, max, args)
 }
 
 /*
@@ -165,8 +163,8 @@ O(log(N))
 如果 member 是有序集 key 的成员，返回 member 的排名。
 如果 member 不是有序集 key 的成员，返回 nil 。
 */
-func (z *Zset) ZRANK(key string, member interface{}) *redis.Resp {
-	return operate("ZRANK", key, member)
+func (z *Zset) ZRANK(result interface{}, key string, member interface{}) error {
+	return operate(result, "ZRANK", key, member)
 }
 
 /*
@@ -184,8 +182,8 @@ O(M*log(N))， N 为有序集的基数， M 为被成功移除的成员的数量
 返回值:
 被成功移除的成员的数量，不包括被忽略的成员。
 */
-func (z *Zset) ZREM(key string, member ...interface{}) *redis.Resp {
-	return operate("ZREM", key, member)
+func (z *Zset) ZREM(result interface{}, key string, member ...interface{}) error {
+	return operate(result, "ZREM", key, member)
 }
 
 /*
@@ -204,8 +202,8 @@ O(log(N)+M)， N 为有序集的基数，而 M 为被移除成员的数量。
 返回值:
 被移除成员的数量。
 */
-func (z *Zset) ZREMRANGEBYRANK(key string, start, stop int) *redis.Resp {
-	return operate("ZREMRANGEBYRANK", key, start, stop)
+func (z *Zset) ZREMRANGEBYRANK(result interface{}, key string, start, stop int) error {
+	return operate(result, "ZREMRANGEBYRANK", key, start, stop)
 }
 
 /*
@@ -222,8 +220,8 @@ O(log(N)+M)， N 为有序集的基数，而 M 为被移除成员的数量。
 返回值:
 被移除成员的数量。
 */
-func (z *Zset) ZREMRANGEBYSCORE(key string, min, max interface{}) *redis.Resp {
-	return operate("ZREMRANGEBYSCORE", key, min, max)
+func (z *Zset) ZREMRANGEBYSCORE(result interface{}, key string, min, max interface{}) error {
+	return operate(result, "ZREMRANGEBYSCORE", key, min, max)
 }
 
 /*
@@ -242,8 +240,8 @@ O(log(N)+M)， N 为有序集的基数，而 M 为结果集的基数。
 返回值:
 指定区间内，带有 score 值(可选)的有序集成员的列表
 */
-func (z *Zset) ZREVRANGE(key string, start, stop int, args ...interface{}) *redis.Resp {
-	return operate("ZREVRANGE", key, start, stop, args)
+func (z *Zset) ZREVRANGE(result interface{}, key string, start, stop int, args ...interface{}) error {
+	return operate(result, "ZREVRANGE", key, start, stop, args)
 }
 
 /*
@@ -262,8 +260,8 @@ O(log(N)+M)， N 为有序集的基数， M 为结果集的基数。
 返回值:
 指定区间内，带有 score 值(可选)的有序集成员的列表。
 */
-func (z *Zset) ZREVRANGEBYSCORE(key string, max, min interface{}, args ...interface{}) *redis.Resp {
-	return operate("ZREVRANGEBYSCORE", key, max, min, args)
+func (z *Zset) ZREVRANGEBYSCORE(result interface{}, key string, max, min interface{}, args ...interface{}) error {
+	return operate(result, "ZREVRANGEBYSCORE", key, max, min, args)
 }
 
 /*
@@ -283,8 +281,8 @@ O(log(N))
 如果 member 是有序集 key 的成员，返回 member 的排名。
 如果 member 不是有序集 key 的成员，返回 nil 。
 */
-func (z *Zset) ZREVRANK(key string, member interface{}) *redis.Resp {
-	return operate("ZREVRANK", key, member)
+func (z *Zset) ZREVRANK(result interface{}, key string, member interface{}) error {
+	return operate(result, "ZREVRANK", key, member)
 }
 
 /*
@@ -301,8 +299,8 @@ O(1)
 返回值:
 member 成员的 score 值，以字符串形式表示。
 */
-func (z *Zset) ZSCORE(key string, member interface{}) *redis.Resp {
-	return operate("ZSCORE", key, member)
+func (z *Zset) ZSCORE(result interface{}, key string, member interface{}) error {
+	return operate(result, "ZSCORE", key, member)
 }
 
 /*
@@ -331,8 +329,8 @@ O(N)+O(M log(M))， N 为给定有序集基数的总和， M 为结果集的基�
 返回值:
 保存到 destination 的结果集的基数。
 */
-func (z *Zset) ZUNIONSTORE(destination string, numkeys int, key ...interface{}) *redis.Resp {
-	return operate("ZUNIONSTORE", destination, numkeys, key)
+func (z *Zset) ZUNIONSTORE(result interface{}, destination string, numkeys int, key ...interface{}) error {
+	return operate(result, "ZUNIONSTORE", destination, numkeys, key)
 }
 
 /*
@@ -351,8 +349,8 @@ O(N*K)+O(M*log(M))， N 为给定 key 中基数最小的有序集， K 为给定
 返回值:
 保存到 destination 的结果集的基数。
 */
-func (z *Zset) ZINTERSTORE(destination string, numkeys int, key ...interface{}) *redis.Resp {
-	return operate("ZINTERSTORE", destination, numkeys, key)
+func (z *Zset) ZINTERSTORE(result interface{}, destination string, numkeys int, key ...interface{}) error {
+	return operate(result, "ZINTERSTORE", destination, numkeys, key)
 }
 
 /*
@@ -360,8 +358,8 @@ ZSCAN key cursor [MATCH pattern] [COUNT count]
 
 详细信息请参考 SCAN 命令。
 */
-func (z *Zset) ZSCAN(key string, cursor int, args interface{}) *redis.Resp {
-	return operate("ZSCAN", key, cursor, args)
+func (z *Zset) ZSCAN(result interface{}, key string, cursor int, args interface{}) error {
+	return operate(result, "ZSCAN", key, cursor, args)
 }
 
 /*
@@ -387,8 +385,8 @@ O(log(N)+M)， 其中 N 为有序集合的元素数量， 而 M 则是命令返�
 返回值：
 数组回复：一个列表，列表里面包含了有序集合在指定范围内的成员。
 */
-func (z *Zset) ZRANGEBYLEX(key string, min, max interface{}, args ...interface{}) *redis.Resp {
-	return operate("ZRANGEBYLEX", key, min, max, args)
+func (z *Zset) ZRANGEBYLEX(result interface{}, key string, min, max interface{}, args ...interface{}) error {
+	return operate(result, "ZRANGEBYLEX", key, min, max, args)
 }
 
 /*
@@ -405,8 +403,8 @@ O(log(N))，其中 N 为有序集合包含的元素数量。
 返回值：
 整数回复：指定范围内的元素数量。
 */
-func (z *Zset) ZLEXCOUNT(key string, min, max interface{}) *redis.Resp {
-	return operate("ZLEXCOUNT", key, min, max)
+func (z *Zset) ZLEXCOUNT(result interface{}, key string, min, max interface{}) error {
+	return operate(result, "ZLEXCOUNT", key, min, max)
 }
 
 /*
@@ -423,6 +421,6 @@ O(log(N)+M)， 其中 N 为有序集合的元素数量， 而 M 则为被移除�
 返回值：
 整数回复：被移除的元素数量。
 */
-func (z *Zset) ZREMRANGEBYLEX(key string, min, max interface{}) *redis.Resp {
-	return operate("ZREMRANGEBYLEX", key, min, max)
+func (z *Zset) ZREMRANGEBYLEX(result interface{}, key string, min, max interface{}) error {
+	return operate(result, "ZREMRANGEBYLEX", key, min, max)
 }

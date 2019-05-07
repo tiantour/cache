@@ -1,7 +1,5 @@
 package cache
 
-import "github.com/mediocregopher/radix.v2/redis"
-
 // Hash *Hash
 type Hash struct{}
 
@@ -23,8 +21,8 @@ O(N)， N 为要删除的域的数量。
 返回值:
 被成功移除的域的数量，不包括被忽略的域。
 */
-func (h *Hash) HDEL(key string, field ...interface{}) *redis.Resp {
-	return operate("HDEL", key, field)
+func (h *Hash) HDEL(result interface{}, key string, field ...interface{}) error {
+	return operate(result, "HDEL", key, field)
 }
 
 /*
@@ -40,8 +38,8 @@ O(1)
 如果哈希表含有给定域，返回 1 。
 如果哈希表不含有给定域，或 key 不存在，返回 0 。
 */
-func (h *Hash) HEXISTS(key string, field interface{}) *redis.Resp {
-	return operate("HEXISTS", key, field)
+func (h *Hash) HEXISTS(result interface{}, key string, field interface{}) error {
+	return operate(result, "HEXISTS", key, field)
 }
 
 /*
@@ -57,8 +55,8 @@ O(1)
 给定域的值。
 当给定域不存在或是给定 key 不存在时，返回 nil 。
 */
-func (h *Hash) HGET(key string, field interface{}) *redis.Resp {
-	return operate("HGET", key, field)
+func (h *Hash) HGET(result interface{}, key string, field interface{}) error {
+	return operate(result, "HGET", key, field)
 }
 
 /*
@@ -76,8 +74,8 @@ O(N)， N 为哈希表的大小。
 以列表形式返回哈希表的域和域的值。
 若 key 不存在，返回空列表。
 */
-func (h *Hash) HGETALL(key string) *redis.Resp {
-	return operate("HGETALL", key)
+func (h *Hash) HGETALL(result interface{}, key string) error {
+	return operate(result, "HGETALL", key)
 }
 
 /*
@@ -102,8 +100,8 @@ O(1)
 返回值：
 执行 HINCRBY 命令之后，哈希表 key 中域 field 的值。
 */
-func (h *Hash) HINCRBY(key string, field interface{}, increment int) *redis.Resp {
-	return operate("HINCRBY", key, field, increment)
+func (h *Hash) HINCRBY(result interface{}, key string, field interface{}, increment int) error {
+	return operate(result, "HINCRBY", key, field, increment)
 }
 
 /*
@@ -128,8 +126,8 @@ O(1)
 返回值：
 执行加法操作之后 field 域的值。
 */
-func (h *Hash) HINCRBYFLOAT(key string, field interface{}, increment float64) *redis.Resp {
-	return operate("HINCRBYFLOAT", key, field, increment)
+func (h *Hash) HINCRBYFLOAT(result interface{}, key string, field interface{}, increment float64) error {
+	return operate(result, "HINCRBYFLOAT", key, field, increment)
 }
 
 /*
@@ -145,8 +143,8 @@ O(N)， N 为哈希表的大小。
 一个包含哈希表中所有域的表。
 当 key 不存在时，返回一个空表。
 */
-func (h *Hash) HKEYS(key string) *redis.Resp {
-	return operate("HKEYS", key)
+func (h *Hash) HKEYS(result interface{}, key string) error {
+	return operate(result, "HKEYS", key)
 }
 
 /*
@@ -160,8 +158,8 @@ O(1)
 哈希表中域的数量。
 当 key 不存在时，返回 0 。
 */
-func (h *Hash) HLEN(key string) *redis.Resp {
-	return operate("HLEN", key)
+func (h *Hash) HLEN(result interface{}, key string) error {
+	return operate(result, "HLEN", key)
 }
 
 /*
@@ -180,8 +178,8 @@ O(N)， N 为给定域的数量。
 返回值：
 一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。
 */
-func (h *Hash) HMGET(key string, field ...interface{}) *redis.Resp {
-	return operate("HMGET", key, field)
+func (h *Hash) HMGET(result interface{}, key string, field ...interface{}) error {
+	return operate(result, "HMGET", key, field)
 }
 
 /*
@@ -201,8 +199,8 @@ O(N)， N 为 field-value 对的数量。
 如果命令执行成功，返回 OK 。
 当 key 不是哈希表(hash)类型时，返回一个错误。
 */
-func (h *Hash) HMSET(key string, args ...interface{}) *redis.Resp {
-	return operate("HMSET", key, args)
+func (h *Hash) HMSET(result interface{}, key string, args ...interface{}) error {
+	return operate(result, "HMSET", key, args)
 }
 
 /*
@@ -222,8 +220,8 @@ O(1)
 如果 field 是哈希表中的一个新建域，并且值设置成功，返回 1 。
 如果哈希表中域 field 已经存在且旧值已被新值覆盖，返回 0 。
 */
-func (h *Hash) HSET(key string, field, value interface{}) *redis.Resp {
-	return operate("HSET", key, field, value)
+func (h *Hash) HSET(result interface{}, key string, field, value interface{}) error {
+	return operate(result, "HSET", key, field, value)
 }
 
 /*
@@ -243,8 +241,8 @@ O(1)
 设置成功，返回 1 。
 如果给定域已经存在且没有操作被执行，返回 0 。
 */
-func (h *Hash) HSETNX(key string, field, value interface{}) *redis.Resp {
-	return operate("HSETNX", key, field, value)
+func (h *Hash) HSETNX(result interface{}, key string, field, value interface{}) error {
+	return operate(result, "HSETNX", key, field, value)
 }
 
 /*
@@ -260,8 +258,8 @@ O(N)， N 为哈希表的大小。
 一个包含哈希表中所有值的表。
 当 key 不存在时，返回一个空表。
 */
-func (h *Hash) HVALS(key string) *redis.Resp {
-	return operate("HVALS", key)
+func (h *Hash) HVALS(result interface{}, key string) error {
+	return operate(result, "HVALS", key)
 }
 
 /*
@@ -269,8 +267,8 @@ HSCAN key cursor [MATCH pattern] [COUNT count]
 
 具体信息请参考 SCAN 命令。
 */
-func (h *Hash) HSCAN(key string, cursor int, args interface{}) *redis.Resp {
-	return operate("HSCAN", key, cursor, args)
+func (h *Hash) HSCAN(result interface{}, key string, cursor int, args interface{}) error {
+	return operate(result, "HSCAN", key, cursor, args)
 }
 
 /*
@@ -287,6 +285,6 @@ O(1)
 返回值：
 一个整数。
 */
-func (h *Hash) HSTRLEN(key string, field interface{}) *redis.Resp {
-	return operate("HSTRLEN", key, field)
+func (h *Hash) HSTRLEN(result interface{}, key string, field interface{}) error {
+	return operate(result, "HSTRLEN", key, field)
 }

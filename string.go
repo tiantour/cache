@@ -1,9 +1,5 @@
 package cache
 
-import (
-	"github.com/mediocregopher/radix.v2/redis"
-)
-
 // String string
 type String struct{}
 
@@ -26,8 +22,8 @@ APPEND key value
 返回值：
 追加 value 之后， key 中字符串的长度。
 */
-func (s *String) APPEND(key string, value interface{}) *redis.Resp {
-	return operate("APPEND", key, value)
+func (s *String) APPEND(result interface{}, key string, value interface{}) error {
+	return operate(result, "APPEND", key, value)
 }
 
 /*
@@ -48,8 +44,8 @@ O(N)
 返回值：
 被设置为 1 的位的数量。
 */
-func (s *String) BITCOUNT(key string, args ...interface{}) *redis.Resp {
-	return operate("BITCOUNT", key, args)
+func (s *String) BITCOUNT(result interface{}, key string, args ...interface{}) error {
+	return operate(result, "BITCOUNT", key, args)
 }
 
 /*
@@ -79,8 +75,8 @@ O(N)
 保存到 destkey 的字符串的长度，和输入 key 中最长的字符串长度相等。
 BITOP 的复杂度为 O(N) ，当处理大型矩阵(matrix)或者进行大数据量的统计时，最好将任务指派到附属节点(slave)进行，避免阻塞主节点。
 */
-func (s *String) BITOP(operation, destKey string, key ...string) *redis.Resp {
-	return operate("BITOP", operation, destKey, key)
+func (s *String) BITOP(result interface{}, operation, destKey string, key ...string) error {
+	return operate(result, "BITOP", operation, destKey, key)
 }
 
 /*
@@ -90,8 +86,8 @@ BITFIELD 命令可以将一个 Redis 字符串看作是一个由二进制位组�
 
 BITFIELD 命令可以在一次调用中同时对多个位范围进行操作： 它接受一系列待执行的操作作为参数， 并返回一个数组作为回复， 数组中的每个元素就是对应操作的执行结果。
 */
-func (s *String) BITFIELD(key string, args ...interface{}) *redis.Resp {
-	return operate("BITFIELD", key, args)
+func (s *String) BITFIELD(result interface{}, key string, args ...interface{}) error {
+	return operate(result, "BITFIELD", key, args)
 }
 
 /*
@@ -114,8 +110,8 @@ O(1)
 返回值：
 执行 DECR 命令之后 key 的值。
 */
-func (s *String) DECR(key string) *redis.Resp {
-	return operate("DECR", key)
+func (s *String) DECR(result interface{}, key string) error {
+	return operate(result, "DECR", key)
 }
 
 /*
@@ -138,8 +134,8 @@ O(1)
 返回值：
 减去 decrement 之后， key 的值。
 */
-func (s *String) DECRBY(key string, decrement int) *redis.Resp {
-	return operate("DECRBY", key, decrement)
+func (s *String) DECRBY(result interface{}, key string, decrement int) error {
+	return operate(result, "DECRBY", key, decrement)
 }
 
 /*
@@ -159,8 +155,8 @@ O(1)
 当 key 不存在时，返回 nil ，否则，返回 key 的值。
 如果 key 不是字符串类型，那么返回一个错误。
 */
-func (s *String) GET(key string) (resp *redis.Resp) {
-	return operate("GET", key)
+func (s *String) GET(result interface{}, key string) error {
+	return operate(result, "GET", key)
 }
 
 /*
@@ -177,8 +173,8 @@ O(1)
 返回值：
 字符串值指定偏移量上的位(bit)。
 */
-func (s *String) GETBIT(key string, offset int) (resp *redis.Resp) {
-	return operate("GETBIT", key, offset)
+func (s *String) GETBIT(result interface{}, key string, offset int) error {
+	return operate(result, "GETBIT", key, offset)
 }
 
 /*
@@ -199,8 +195,8 @@ O(N)， N 为要返回的字符串的长度。
 返回值：
 截取得出的子字符串。
 */
-func (s *String) GETRANGE(key string, start, stop int) (resp *redis.Resp) {
-	return operate("GETRANGE", key, start, stop)
+func (s *String) GETRANGE(result interface{}, key string, start, stop int) error {
+	return operate(result, "GETRANGE", key, start, stop)
 }
 
 /*
@@ -218,8 +214,8 @@ O(1)
 返回给定 key 的旧值。
 当 key 没有旧值时，也即是， key 不存在时，返回 nil 。
 */
-func (s *String) GETSET(key string, value interface{}) (resp *redis.Resp) {
-	return operate("GETSET", key, value)
+func (s *String) GETSET(result interface{}, key string, value interface{}) error {
+	return operate(result, "GETSET", key, value)
 }
 
 /*
@@ -241,8 +237,8 @@ O(1)
 返回值：
 执行 INCR 命令之后 key 的值。
 */
-func (s *String) INCR(key string) *redis.Resp {
-	return operate("INCR", key)
+func (s *String) INCR(result interface{}, key string) error {
+	return operate(result, "INCR", key)
 }
 
 /*
@@ -265,8 +261,8 @@ O(1)
 返回值：
 加上 increment 之后， key 的值
 */
-func (s *String) INCRBY(key string, increment int) *redis.Resp {
-	return operate("INCRBY", key, increment)
+func (s *String) INCRBY(result interface{}, key string, increment int) error {
+	return operate(result, "INCRBY", key, increment)
 }
 
 /*
@@ -293,8 +289,8 @@ O(1)
 返回值：
 执行命令之后 key 的值。
 */
-func (s *String) INCRBYFLOAT(key string, increment float64) *redis.Resp {
-	return operate("INCRBYFLOAT", key, increment)
+func (s *String) INCRBYFLOAT(result interface{}, key string, increment float64) error {
+	return operate(result, "INCRBYFLOAT", key, increment)
 }
 
 /*
@@ -311,8 +307,8 @@ O(N) , N 为给定 key 的数量。
 返回值：
 一个包含所有给定 key 的值的列表。
 */
-func (s *String) MGET(key ...string) *redis.Resp {
-	return operate("MGET", key)
+func (s *String) MGET(result interface{}, key ...string) error {
+	return operateS(result, "MGET", key...)
 }
 
 /*
@@ -331,8 +327,8 @@ O(N)， N 为要设置的 key 数量。
 返回值：
 总是返回 OK (因为 MSET 不可能失败)
 */
-func (s *String) MSET(args ...interface{}) *redis.Resp {
-	return operate("MSET", args)
+func (s *String) MSET(result interface{}, args ...string) error {
+	return operateS(result, "MSET", args...)
 }
 
 /*
@@ -352,8 +348,8 @@ O(N)， N 为要设置的 key 的数量。
 当所有 key 都成功设置，返回 1 。
 如果所有给定 key 都设置失败(至少有一个 key 已经存在)，那么返回 0 。
 */
-func (s *String) MSETNX(args ...interface{}) *redis.Resp {
-	return operate("MSETNX", args)
+func (s *String) MSETNX(result interface{}, args ...string) error {
+	return operateS(result, "MSETNX", args...)
 }
 
 /*
@@ -368,8 +364,8 @@ O(1)
 返回值：
 设置成功时返回 OK 。
 */
-func (s *String) PSETEX(key string, milliseconds int, value interface{}) *redis.Resp {
-	return operate("PSETEX", key, milliseconds, value)
+func (s *String) PSETEX(result interface{}, key string, milliseconds int, value interface{}) error {
+	return operate(result, "PSETEX", key, milliseconds, value)
 }
 
 /*
@@ -400,8 +396,8 @@ O(1)
 从 Redis 2.6.12 版本开始， SET 在设置操作成功完成时，才返回 OK 。
 如果设置了 NX 或者 XX ，但因为条件没达到而造成设置操作未执行，那么命令返回空批量回复（NULL Bulk Reply）。
 */
-func (s *String) SET(key string, value interface{}, args ...interface{}) (resp *redis.Resp) {
-	return operate("SET", key, value, args)
+func (s *String) SET(result interface{}, key string, value interface{}, args ...interface{}) error {
+	return operate(result, "SET", key, value, args)
 }
 
 /*
@@ -425,8 +421,8 @@ O(1)
 返回值：
 指定偏移量原来储存的位。
 */
-func (s *String) SETBIT(key string, offset, value int) (resp *redis.Resp) {
-	return operate("SETBIT", key, offset, value)
+func (s *String) SETBIT(result interface{}, key string, offset, value int) error {
+	return operate(result, "SETBIT", key, offset, value)
 }
 
 /*
@@ -450,8 +446,8 @@ O(1)
 设置成功时返回 OK 。
 当 seconds 参数不合法时，返回一个错误。
 */
-func (s *String) SETEX(key string, seconds int, value interface{}) (resp *redis.Resp) {
-	return operate("SETEX", key, seconds, value)
+func (s *String) SETEX(result interface{}, key string, seconds int, value interface{}) error {
+	return operate(result, "SETEX", key, seconds, value)
 }
 
 /*
@@ -471,8 +467,8 @@ O(1)
 设置成功，返回 1 。
 设置失败，返回 0 。
 */
-func (s *String) SETNX(key string, value interface{}) (resp *redis.Resp) {
-	return operate("SETNX", key, value)
+func (s *String) SETNX(result interface{}, key string, value interface{}) error {
+	return operate(result, "SETNX", key, value)
 }
 
 /*
@@ -495,8 +491,8 @@ SETRANGE 命令会确保字符串足够长以便将 value 设置在指定的偏�
 返回值：
 被 SETRANGE 修改之后，字符串的长度。
 */
-func (s *String) SETRANGE(key string, offset int, value interface{}) (resp *redis.Resp) {
-	return operate("SETRANGE", key, offset, value)
+func (s *String) SETRANGE(result interface{}, key string, offset int, value interface{}) error {
+	return operate(result, "SETRANGE", key, offset, value)
 }
 
 /*
@@ -514,6 +510,6 @@ O(1)
 字符串值的长度。
 当 key 不存在时，返回 0 。
 */
-func (s *String) STRLEN(key string) (resp *redis.Resp) {
-	return operate("STRLEN", key)
+func (s *String) STRLEN(result interface{}, key string) error {
+	return operate(result, "STRLEN", key)
 }
