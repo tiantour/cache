@@ -3,7 +3,7 @@ package cache
 import (
 	"fmt"
 
-	"github.com/mediocregopher/radix"
+	"github.com/mediocregopher/radix/v3"
 	"github.com/tiantour/conf"
 )
 
