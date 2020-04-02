@@ -8,7 +8,7 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1w=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
-github.com/tiantour/conf v1.2.5 h1:ZJF/5vSTpv/Hu9ttCMW3m6Kx0D12B6J1fRqU39ubj80=
-github.com/tiantour/conf v1.2.5/go.mod h1:oopD0jGktJPIODpJ/MlNSp8olNGgyzZjmI/VTcgAwiI=
+github.com/tiantour/conf v1.5.1 h1:SmqDaVEaytT7Rlpo9OLqMSrRulvQYQOxZWzNam3rUIY=
+github.com/tiantour/conf v1.5.1/go.mod h1:Qe1Fs5sY3xsrKSh9NhnHCh7qR4T9/XIM6/E7LRbC7CE=
 golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 h1:/atklqdjdhuosWIl6AIbOeHJjicWYPqR9bpxqxYG2pA=
 golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
