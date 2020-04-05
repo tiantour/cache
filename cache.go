@@ -19,7 +19,7 @@ func init() {
 	)
 
 	var err error
-	cache, err = radix.NewPool("tcp", address, 10)
+	cache, err = radix.NewPool("tcp", address, 25)
 	if err != nil {
 		log.Fatalf("open cache err: %v", err)
 	}
