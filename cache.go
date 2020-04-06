@@ -8,8 +8,8 @@ import (
 	"github.com/tiantour/conf"
 )
 
-// cache pool
-var cache *radix.Pool
+// client pool
+var client *radix.Pool
 
 func init() {
 	c := conf.NewCache().Data
@@ -19,20 +19,21 @@ func init() {
 	)
 
 	var err error
-	cache, err = radix.NewPool("tcp", address, 25)
+	client, err = radix.NewPool("tcp", address, 10)
 	if err != nil {
 		log.Fatalf("open cache err: %v", err)
+		defer client.Close()
 	}
 }
 
 // operate redis
 func operate(result interface{}, cmd, key string, args ...interface{}) error {
 	action := radix.FlatCmd(result, cmd, key, args...)
-	return cache.Do(action)
+	return client.Do(action)
 }
 
 // operate redis
 func operateS(result interface{}, cmd string, args ...string) error {
 	action := radix.Cmd(result, cmd, args...)
-	return cache.Do(action)
+	return client.Do(action)
 }
