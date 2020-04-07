@@ -13,13 +13,16 @@ var client *radix.Pool
 
 func init() {
 	c := conf.NewCache().Data
+	fmt.Println(1, c)
 	address := fmt.Sprintf("%s%s",
 		c.IP,
 		c.Port,
 	)
+	fmt.Println(2, address)
 
 	var err error
 	client, err = radix.NewPool("tcp", address, 10)
+	fmt.Println(3, client, err)
 	if err != nil {
 		log.Fatalf("open cache err: %v", err)
 		defer client.Close()
