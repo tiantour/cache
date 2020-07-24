@@ -22,8 +22,8 @@ func init() {
 	client, err = radix.NewPool("tcp", address, 10)
 	if err != nil {
 		log.Fatalf("open cache err: %v", err)
-		defer client.Close()
 	}
+	defer client.Close()
 }
 
 // operate redis
