@@ -3,9 +3,8 @@ module github.com/tiantour/cache
 go 1.17
 
 require (
-	github.com/mediocregopher/radix/v3 v3.7.1
-	github.com/tiantour/conf v1.8.0
-
+	github.com/mediocregopher/radix/v3 v3.8.0
+	github.com/tiantour/conf v1.9.0
 )
 
 require (
