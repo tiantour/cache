@@ -1,5 +1,7 @@
 package cache
 
+import "github.com/mediocregopher/radix/v4"
+
 // Set set
 type Set struct{}
 
@@ -26,7 +28,7 @@ O(N)， N 是被添加的元素的数量。
 被添加到集合中的新元素的数量，不包括被忽略的元素。
 */
 func (s *Set) SADD(result interface{}, key string, member ...interface{}) error {
-	return operate(result, "SADD", key, member)
+	return do(radix.FlatCmd(result, "SADD", key, member))
 }
 
 /*
@@ -43,7 +45,7 @@ O(1)
 当 key 不存在时，返回 0 。
 */
 func (s *Set) SCARD(result interface{}, key string) error {
-	return operate(result, "SCARD", key)
+	return do(radix.Cmd(result, "SCARD", key))
 }
 
 /*
@@ -61,7 +63,7 @@ O(N)， N 是所有给定集合的成员数量之和。
 一个包含差集成员的列表。
 */
 func (s *Set) SDIFF(result interface{}, key ...string) error {
-	return operateS(result, "SDIFF", key...)
+	return do(radix.Cmd(result, "SDIFF", key...))
 }
 
 /*
@@ -81,7 +83,7 @@ O(N)， N 是所有给定集合的成员数量之和。
 结果集中的元素数量。
 */
 func (s *Set) SDIFFSTORE(result interface{}, destination string, key ...string) error {
-	return operate(result, "SDIFFSTORE", destination, key)
+	return do(radix.FlatCmd(result, "SDIFFSTORE", destination, key))
 }
 
 /*
@@ -101,7 +103,7 @@ O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的
 交集成员的列表。
 */
 func (s *Set) SINTER(result interface{}, key ...string) error {
-	return operateS(result, "SINTER", key...)
+	return do(radix.Cmd(result, "SINTER", key...))
 }
 
 /*
@@ -121,7 +123,7 @@ O(N * M)， N 为给定集合当中基数最小的集合， M 为给定集合的
 结果集中的成员数量。
 */
 func (s *Set) SINTERSTORE(result interface{}, destination string, key ...string) error {
-	return operate(result, "SINTERSTORE", destination, key)
+	return do(radix.FlatCmd(result, "SINTERSTORE", destination, key))
 }
 
 /*
@@ -139,7 +141,7 @@ O(1)
 
 */
 func (s *Set) SISMEMBER(result interface{}, key string, member interface{}) error {
-	return operate(result, "SISMEMBER", key, member)
+	return do(radix.FlatCmd(result, "SISMEMBER", key, member))
 }
 
 /*
@@ -157,7 +159,7 @@ O(N)， N 为集合的基数。
 集合中的所有成员。
 */
 func (s *Set) SMEMBERS(result interface{}, key string) error {
-	return operate(result, "SMEMBERS", key)
+	return do(radix.Cmd(result, "SMEMBERS", key))
 }
 
 /*
@@ -183,7 +185,7 @@ O(1)
 
 */
 func (s *Set) SMOVE(result interface{}, source, destination string, member interface{}) error {
-	return operate(result, "SMOVE", source, destination, member)
+	return do(radix.FlatCmd(result, "SMOVE", source, destination, member))
 }
 
 /*
@@ -202,7 +204,7 @@ O(1)
 当 key 不存在或 key 是空集时，返回 nil 。
 */
 func (s *Set) SPOP(result interface{}, key string) error {
-	return operate(result, "SPOP", key)
+	return do(radix.Cmd(result, "SPOP", key))
 }
 
 /*
@@ -226,7 +228,7 @@ SRANDMEMBER key [count]
 如果提供了 count 参数，那么返回一个数组；如果集合为空，返回空数组。
 */
 func (s *Set) SRANDMEMBER(result interface{}, key string, args interface{}) error {
-	return operate(result, "SRANDMEMBER", key, args)
+	return do(radix.FlatCmd(result, "SRANDMEMBER", key, args))
 }
 
 /*
@@ -245,7 +247,7 @@ O(N)， N 为给定 member 元素的数量。
 被成功移除的元素的数量，不包括被忽略的元素。
 */
 func (s *Set) SREM(result interface{}, key string, member ...interface{}) error {
-	return operate(result, "SREM", key, member)
+	return do(radix.FlatCmd(result, "SREM", key, member))
 }
 
 /*
@@ -263,7 +265,7 @@ O(N)， N 是所有给定集合的成员数量之和。
 并集成员的列表。
 */
 func (s *Set) SUNION(result interface{}, key ...string) error {
-	return operateS(result, "SUNION", key...)
+	return do(radix.Cmd(result, "SUNION", key...))
 }
 
 /*
@@ -283,7 +285,7 @@ O(N)， N 是所有给定集合的成员数量之和。
 结果集中的元素数量。
 */
 func (s *Set) SUNIONSTORE(result interface{}, destination string, key ...string) error {
-	return operate(result, "SUNIONSTORE", destination, key)
+	return do(radix.FlatCmd(result, "SUNIONSTORE", destination, key))
 }
 
 /*
@@ -293,5 +295,5 @@ SSCAN key cursor [MATCH pattern] [COUNT count]
 
 */
 func (s *Set) SSCAN(result interface{}, key string, cursor int, args ...interface{}) error {
-	return operate(result, "SSCAN", key, cursor, args)
+	return do(radix.FlatCmd(result, "SSCAN", key, cursor, args))
 }

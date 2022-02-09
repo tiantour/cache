@@ -1,6 +1,10 @@
 package cache
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/mediocregopher/radix/v4"
+)
 
 // List list
 type List struct{}
@@ -33,7 +37,7 @@ BLPOP 保证返回的元素来自 command ，因为它是按”查找 job -> 查
 */
 func (l *List) BLPOP(result interface{}, timeout int, key ...string) error {
 	key = append(key, strconv.Itoa(timeout))
-	return operateS(result, "BLPOP", key...)
+	return do(radix.Cmd(result, "BLPOP", key...))
 }
 
 /*
@@ -57,7 +61,7 @@ O(1)
 */
 func (l *List) BRPOP(result interface{}, timeout int, key ...string) error {
 	key = append(key, strconv.Itoa(timeout))
-	return operateS(result, "BRPOP", key...)
+	return do(radix.Cmd(result, "BRPOP", key...))
 }
 
 /*
@@ -81,7 +85,7 @@ O(1)
 
 */
 func (l *List) BRPOPLPUSH(result interface{}, source, destination string, timeout int) error {
-	return operate(result, "BRPOPLPUSH", source, destination, timeout)
+	return do(radix.FlatCmd(result, "BRPOPLPUSH", source, destination, timeout))
 }
 
 /*
@@ -105,7 +109,7 @@ O(N)， N 为到达下标 index 过程中经过的元素数量。
 如果 index 参数的值不在列表的区间范围内(out of range)，返回 nil 。
 */
 func (l *List) LINDEX(result interface{}, key string, index int) error {
-	return operate(result, "LINDEX", key, index)
+	return do(radix.FlatCmd(result, "LINDEX", key, index))
 }
 
 /*
@@ -129,7 +133,7 @@ O(N)， N 为寻找 pivot 过程中经过的元素数量。
 如果 key 不存在或为空列表，返回 0 。
 */
 func (l *List) LINSERT(result interface{}, key, operation, pivot, value string) error {
-	return operate(result, "LINSERT", key, operation, pivot, value)
+	return do(radix.FlatCmd(result, "LINSERT", key, operation, pivot, value))
 }
 
 /*
@@ -149,7 +153,7 @@ O(1)
 列表 key 的长度。
 */
 func (l *List) LLEN(result interface{}, key string) error {
-	return operate(result, "LLEN", key)
+	return do(radix.Cmd(result, "LLEN", key))
 }
 
 /*
@@ -166,7 +170,7 @@ O(1)
 当 key 不存在时，返回 nil 。
 */
 func (l *List) LPOP(result interface{}, key string) error {
-	return operate(result, "LPOP", key)
+	return do(radix.Cmd(result, "LPOP", key))
 }
 
 /*
@@ -189,7 +193,7 @@ O(1)
 执行 LPUSH 命令后，列表的长度。
 */
 func (l *List) LPUSH(result interface{}, key string, value ...interface{}) error {
-	return operate(result, "LPUSH", key, value)
+	return do(radix.FlatCmd(result, "LPUSH", key, value))
 }
 
 /*
@@ -207,7 +211,7 @@ O(1)
 LPUSHX 命令执行之后，表的长度。
 */
 func (l *List) LPUSHX(result interface{}, key string, value interface{}) error {
-	return operate(result, "LPUSHX", key, value)
+	return do(radix.FlatCmd(result, "LPUSHX", key, value))
 }
 
 /*
@@ -239,7 +243,7 @@ O(S+N)， S 为偏移量 start ， N 为指定区间内元素的数量。
 一个列表，包含指定区间内的元素。
 */
 func (l *List) LRANGE(result interface{}, key string, start, stop int) error {
-	return operate(result, "LRANGE", key, start, stop)
+	return do(radix.FlatCmd(result, "LRANGE", key, start, stop))
 }
 
 /*
@@ -261,7 +265,7 @@ O(N)， N 为列表的长度。
 因为不存在的 key 被视作空表(empty list)，所以当 key 不存在时， LREM 命令总是返回 0 。
 */
 func (l *List) LREM(result interface{}, key string, count int, value string) error {
-	return operate(result, "LREM", key, count, value)
+	return do(radix.FlatCmd(result, "LREM", key, count, value))
 }
 
 /*
@@ -282,7 +286,7 @@ LSET key index value
 操作成功返回 ok ，否则返回错误信息。
 */
 func (l *List) LSET(result interface{}, key string, index int, value string) error {
-	return operate(result, "LSET", key, index, value)
+	return do(radix.FlatCmd(result, "LSET", key, index, value))
 }
 
 /*
@@ -324,7 +328,7 @@ O(N)， N 为被移除的元素的数量。
 命令执行成功时，返回 ok 。
 */
 func (l *List) LTRIM(result interface{}, key string, start, stop int) error {
-	return operate(result, "LTRIM", key, start, stop)
+	return do(radix.FlatCmd(result, "LTRIM", key, start, stop))
 }
 
 /*
@@ -341,7 +345,7 @@ O(1)
 当 key 不存在时，返回 nil 。
 */
 func (l *List) RPOP(result interface{}, key string) error {
-	return operate(result, "RPOP", key)
+	return do(radix.Cmd(result, "RPOP", key))
 }
 
 /*
@@ -365,7 +369,7 @@ O(1)
 被弹出的元素。
 */
 func (l *List) RPOPLPUSH(result interface{}, source, destination string) error {
-	return operate(result, "RPOPLPUSH", source, destination)
+	return do(radix.Cmd(result, "RPOPLPUSH", source, destination))
 }
 
 /*
@@ -388,7 +392,7 @@ O(1)
 执行 RPUSH 操作后，表的长度。
 */
 func (l *List) RPUSH(result interface{}, key string, value ...interface{}) error {
-	return operate(result, "RPUSH", key, value)
+	return do(radix.FlatCmd(result, "RPUSH", key, value))
 }
 
 /*
@@ -406,5 +410,5 @@ O(1)
 RPUSHX 命令执行之后，表的长度。
 */
 func (l *List) RPUSHX(result interface{}, key string, value interface{}) error {
-	return operate(result, "RPUSHX", key, value)
+	return do(radix.FlatCmd(result, "RPUSHX", key, value))
 }

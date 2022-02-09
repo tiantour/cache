@@ -1,5 +1,7 @@
 package cache
 
+import "github.com/mediocregopher/radix/v4"
+
 // Zset zset
 type Zset struct{}
 
@@ -32,7 +34,7 @@ O(M*log(N))， N 是有序集的基数， M 为成功添加的新成员的数量
 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员。
 */
 func (z *Zset) ZADD(result interface{}, key string, args ...interface{}) error {
-	return operate(result, "ZADD", key, args)
+	return do(radix.FlatCmd(result, "ZADD", key, args))
 }
 
 /*
@@ -49,7 +51,7 @@ O(1)
 当 key 不存在时，返回 0 。
 */
 func (z *Zset) ZCARD(result interface{}, key string) error {
-	return operate(result, "ZCARD", key)
+	return do(radix.Cmd(result, "ZCARD", key))
 }
 
 /*
@@ -67,7 +69,7 @@ O(log(N))， N 为有序集的基数。
 score 值在 min 和 max 之间的成员的数量。
 */
 func (z *Zset) ZCOUNT(result interface{}, key string, min, max interface{}) error {
-	return operate(result, "ZCOUNT", key, min, max)
+	return do(radix.FlatCmd(result, "ZCOUNT", key, min, max))
 }
 
 /*
@@ -91,7 +93,7 @@ O(log(N))
 member 成员的新 score 值，以字符串形式表示。
 */
 func (z *Zset) ZINCRBY(result interface{}, key string, increment int, member interface{}) error {
-	return operate(result, "ZINCRBY", key, increment, member)
+	return do(radix.FlatCmd(result, "ZINCRBY", key, increment, member))
 }
 
 /*
@@ -120,7 +122,7 @@ O(log(N)+M)， N 为有序集的基数，而 M 为结果集的基数。
 指定区间内，带有 score 值(可选)的有序集成员的列表。
 */
 func (z *Zset) ZRANGE(result interface{}, key string, start, stop int, args ...interface{}) error {
-	return operate(result, "ZRANGE", key, start, stop, args)
+	return do(radix.FlatCmd(result, "ZRANGE", key, start, stop, args))
 }
 
 /*
@@ -143,7 +145,7 @@ min 和 max 可以是 -inf 和 +inf ，这样一来，你就可以在不知道�
 
 */
 func (z *Zset) ZRANGEBYSCORE(result interface{}, key string, min, max interface{}, args ...interface{}) error {
-	return operate(result, "ZRANGEBYSCORE", key, min, max, args)
+	return do(radix.FlatCmd(result, "ZRANGEBYSCORE", key, min, max, args))
 }
 
 /*
@@ -164,7 +166,7 @@ O(log(N))
 如果 member 不是有序集 key 的成员，返回 nil 。
 */
 func (z *Zset) ZRANK(result interface{}, key string, member interface{}) error {
-	return operate(result, "ZRANK", key, member)
+	return do(radix.FlatCmd(result, "ZRANK", key, member))
 }
 
 /*
@@ -183,7 +185,7 @@ O(M*log(N))， N 为有序集的基数， M 为被成功移除的成员的数量
 被成功移除的成员的数量，不包括被忽略的成员。
 */
 func (z *Zset) ZREM(result interface{}, key string, member ...interface{}) error {
-	return operate(result, "ZREM", key, member)
+	return do(radix.FlatCmd(result, "ZREM", key, member))
 }
 
 /*
@@ -203,7 +205,7 @@ O(log(N)+M)， N 为有序集的基数，而 M 为被移除成员的数量。
 被移除成员的数量。
 */
 func (z *Zset) ZREMRANGEBYRANK(result interface{}, key string, start, stop int) error {
-	return operate(result, "ZREMRANGEBYRANK", key, start, stop)
+	return do(radix.FlatCmd(result, "ZREMRANGEBYRANK", key, start, stop))
 }
 
 /*
@@ -221,7 +223,7 @@ O(log(N)+M)， N 为有序集的基数，而 M 为被移除成员的数量。
 被移除成员的数量。
 */
 func (z *Zset) ZREMRANGEBYSCORE(result interface{}, key string, min, max interface{}) error {
-	return operate(result, "ZREMRANGEBYSCORE", key, min, max)
+	return do(radix.FlatCmd(result, "ZREMRANGEBYSCORE", key, min, max))
 }
 
 /*
@@ -241,7 +243,7 @@ O(log(N)+M)， N 为有序集的基数，而 M 为结果集的基数。
 指定区间内，带有 score 值(可选)的有序集成员的列表
 */
 func (z *Zset) ZREVRANGE(result interface{}, key string, start, stop int, args ...interface{}) error {
-	return operate(result, "ZREVRANGE", key, start, stop, args)
+	return do(radix.FlatCmd(result, "ZREVRANGE", key, start, stop, args))
 }
 
 /*
@@ -261,7 +263,7 @@ O(log(N)+M)， N 为有序集的基数， M 为结果集的基数。
 指定区间内，带有 score 值(可选)的有序集成员的列表。
 */
 func (z *Zset) ZREVRANGEBYSCORE(result interface{}, key string, max, min interface{}, args ...interface{}) error {
-	return operate(result, "ZREVRANGEBYSCORE", key, max, min, args)
+	return do(radix.FlatCmd(result, "ZREVRANGEBYSCORE", key, max, min, args))
 }
 
 /*
@@ -282,7 +284,7 @@ O(log(N))
 如果 member 不是有序集 key 的成员，返回 nil 。
 */
 func (z *Zset) ZREVRANK(result interface{}, key string, member interface{}) error {
-	return operate(result, "ZREVRANK", key, member)
+	return do(radix.FlatCmd(result, "ZREVRANK", key, member))
 }
 
 /*
@@ -300,7 +302,7 @@ O(1)
 member 成员的 score 值，以字符串形式表示。
 */
 func (z *Zset) ZSCORE(result interface{}, key string, member interface{}) error {
-	return operate(result, "ZSCORE", key, member)
+	return do(radix.FlatCmd(result, "ZSCORE", key, member))
 }
 
 /*
@@ -330,7 +332,7 @@ O(N)+O(M log(M))， N 为给定有序集基数的总和， M 为结果集的基�
 保存到 destination 的结果集的基数。
 */
 func (z *Zset) ZUNIONSTORE(result interface{}, destination string, numkeys int, key ...interface{}) error {
-	return operate(result, "ZUNIONSTORE", destination, numkeys, key)
+	return do(radix.FlatCmd(result, "ZUNIONSTORE", destination, numkeys, key))
 }
 
 /*
@@ -350,7 +352,7 @@ O(N*K)+O(M*log(M))， N 为给定 key 中基数最小的有序集， K 为给定
 保存到 destination 的结果集的基数。
 */
 func (z *Zset) ZINTERSTORE(result interface{}, destination string, numkeys int, key ...interface{}) error {
-	return operate(result, "ZINTERSTORE", destination, numkeys, key)
+	return do(radix.FlatCmd(result, "ZINTERSTORE", destination, numkeys, key))
 }
 
 /*
@@ -359,7 +361,7 @@ ZSCAN key cursor [MATCH pattern] [COUNT count]
 详细信息请参考 SCAN 命令。
 */
 func (z *Zset) ZSCAN(result interface{}, key string, cursor int, args interface{}) error {
-	return operate(result, "ZSCAN", key, cursor, args)
+	return do(radix.FlatCmd(result, "ZSCAN", key, cursor, args))
 }
 
 /*
@@ -386,7 +388,7 @@ O(log(N)+M)， 其中 N 为有序集合的元素数量， 而 M 则是命令返�
 数组回复：一个列表，列表里面包含了有序集合在指定范围内的成员。
 */
 func (z *Zset) ZRANGEBYLEX(result interface{}, key string, min, max interface{}, args ...interface{}) error {
-	return operate(result, "ZRANGEBYLEX", key, min, max, args)
+	return do(radix.FlatCmd(result, "ZRANGEBYLEX", key, min, max, args))
 }
 
 /*
@@ -404,7 +406,7 @@ O(log(N))，其中 N 为有序集合包含的元素数量。
 整数回复：指定范围内的元素数量。
 */
 func (z *Zset) ZLEXCOUNT(result interface{}, key string, min, max interface{}) error {
-	return operate(result, "ZLEXCOUNT", key, min, max)
+	return do(radix.FlatCmd(result, "ZLEXCOUNT", key, min, max))
 }
 
 /*
@@ -422,5 +424,5 @@ O(log(N)+M)， 其中 N 为有序集合的元素数量， 而 M 则为被移除�
 整数回复：被移除的元素数量。
 */
 func (z *Zset) ZREMRANGEBYLEX(result interface{}, key string, min, max interface{}) error {
-	return operate(result, "ZREMRANGEBYLEX", key, min, max)
+	return do(radix.FlatCmd(result, "ZREMRANGEBYLEX", key, min, max))
 }

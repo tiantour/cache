@@ -1,39 +1,25 @@
 package cache
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/mediocregopher/radix/v3"
+	"github.com/mediocregopher/radix/v4"
 	"github.com/tiantour/conf"
 )
 
-// client pool
-var client *radix.Pool
+var address = fmt.Sprintf("%s%s", conf.NewCache().Data.IP, conf.NewCache().Data.Port)
 
-func init() {
-	c := conf.NewCache().Data
-	address := fmt.Sprintf("%s%s",
-		c.IP,
-		c.Port,
-	)
+func do(args radix.Action) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	var err error
-	client, err = radix.NewPool("tcp", address, 10)
+	client, err := (radix.PoolConfig{}).New(ctx, "tcp", address)
 	if err != nil {
 		log.Fatalf("open cache err: %v", err)
 		defer client.Close()
 	}
-}
-
-// operate redis
-func operate(result interface{}, cmd, key string, args ...interface{}) error {
-	action := radix.FlatCmd(result, cmd, key, args...)
-	return client.Do(action)
-}
-
-// operate redis
-func operateS(result interface{}, cmd string, args ...string) error {
-	action := radix.Cmd(result, cmd, args...)
-	return client.Do(action)
+	return client.Do(ctx, args)
 }

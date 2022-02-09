@@ -1,5 +1,7 @@
 package cache
 
+import "github.com/mediocregopher/radix/v4"
+
 // Hash *Hash
 type Hash struct{}
 
@@ -22,7 +24,7 @@ O(N)， N 为要删除的域的数量。
 被成功移除的域的数量，不包括被忽略的域。
 */
 func (h *Hash) HDEL(result interface{}, key string, field ...interface{}) error {
-	return operate(result, "HDEL", key, field)
+	return do(radix.FlatCmd(result, "HDEL", key, field))
 }
 
 /*
@@ -39,7 +41,7 @@ O(1)
 如果哈希表不含有给定域，或 key 不存在，返回 0 。
 */
 func (h *Hash) HEXISTS(result interface{}, key string, field interface{}) error {
-	return operate(result, "HEXISTS", key, field)
+	return do(radix.FlatCmd(result, "HEXISTS", key, field))
 }
 
 /*
@@ -56,7 +58,7 @@ O(1)
 当给定域不存在或是给定 key 不存在时，返回 nil 。
 */
 func (h *Hash) HGET(result interface{}, key string, field interface{}) error {
-	return operate(result, "HGET", key, field)
+	return do(radix.FlatCmd(result, "HGET", key, field))
 }
 
 /*
@@ -75,7 +77,7 @@ O(N)， N 为哈希表的大小。
 若 key 不存在，返回空列表。
 */
 func (h *Hash) HGETALL(result interface{}, key string) error {
-	return operate(result, "HGETALL", key)
+	return do(radix.Cmd(result, "HGETALL", key))
 }
 
 /*
@@ -101,7 +103,7 @@ O(1)
 执行 HINCRBY 命令之后，哈希表 key 中域 field 的值。
 */
 func (h *Hash) HINCRBY(result interface{}, key string, field interface{}, increment int) error {
-	return operate(result, "HINCRBY", key, field, increment)
+	return do(radix.FlatCmd(result, "HINCRBY", key, field, increment))
 }
 
 /*
@@ -127,7 +129,7 @@ O(1)
 执行加法操作之后 field 域的值。
 */
 func (h *Hash) HINCRBYFLOAT(result interface{}, key string, field interface{}, increment float64) error {
-	return operate(result, "HINCRBYFLOAT", key, field, increment)
+	return do(radix.FlatCmd(result, "HINCRBYFLOAT", key, field, increment))
 }
 
 /*
@@ -144,7 +146,7 @@ O(N)， N 为哈希表的大小。
 当 key 不存在时，返回一个空表。
 */
 func (h *Hash) HKEYS(result interface{}, key string) error {
-	return operate(result, "HKEYS", key)
+	return do(radix.Cmd(result, "HKEYS", key))
 }
 
 /*
@@ -159,7 +161,7 @@ O(1)
 当 key 不存在时，返回 0 。
 */
 func (h *Hash) HLEN(result interface{}, key string) error {
-	return operate(result, "HLEN", key)
+	return do(radix.Cmd(result, "HLEN", key))
 }
 
 /*
@@ -179,7 +181,7 @@ O(N)， N 为给定域的数量。
 一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。
 */
 func (h *Hash) HMGET(result interface{}, key string, field ...interface{}) error {
-	return operate(result, "HMGET", key, field)
+	return do(radix.FlatCmd(result, "HMGET", key, field))
 }
 
 /*
@@ -200,7 +202,7 @@ O(N)， N 为 field-value 对的数量。
 当 key 不是哈希表(hash)类型时，返回一个错误。
 */
 func (h *Hash) HMSET(result interface{}, key string, args ...interface{}) error {
-	return operate(result, "HMSET", key, args)
+	return do(radix.FlatCmd(result, "HMSET", key, args))
 }
 
 /*
@@ -221,7 +223,7 @@ O(1)
 如果哈希表中域 field 已经存在且旧值已被新值覆盖，返回 0 。
 */
 func (h *Hash) HSET(result interface{}, key string, field, value interface{}) error {
-	return operate(result, "HSET", key, field, value)
+	return do(radix.FlatCmd(result, "HSET", key, field, value))
 }
 
 /*
@@ -242,7 +244,7 @@ O(1)
 如果给定域已经存在且没有操作被执行，返回 0 。
 */
 func (h *Hash) HSETNX(result interface{}, key string, field, value interface{}) error {
-	return operate(result, "HSETNX", key, field, value)
+	return do(radix.FlatCmd(result, "HSETNX", key, field, value))
 }
 
 /*
@@ -259,7 +261,7 @@ O(N)， N 为哈希表的大小。
 当 key 不存在时，返回一个空表。
 */
 func (h *Hash) HVALS(result interface{}, key string) error {
-	return operate(result, "HVALS", key)
+	return do(radix.Cmd(result, "HVALS", key))
 }
 
 /*
@@ -268,7 +270,7 @@ HSCAN key cursor [MATCH pattern] [COUNT count]
 具体信息请参考 SCAN 命令。
 */
 func (h *Hash) HSCAN(result interface{}, key string, cursor int, args interface{}) error {
-	return operate(result, "HSCAN", key, cursor, args)
+	return do(radix.FlatCmd(result, "HSCAN", key, cursor, args))
 }
 
 /*
@@ -286,5 +288,5 @@ O(1)
 一个整数。
 */
 func (h *Hash) HSTRLEN(result interface{}, key string, field interface{}) error {
-	return operate(result, "HSTRLEN", key, field)
+	return do(radix.FlatCmd(result, "HSTRLEN", key, field))
 }

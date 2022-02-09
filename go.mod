@@ -3,11 +3,11 @@ module github.com/tiantour/cache
 go 1.17
 
 require (
-	github.com/mediocregopher/radix/v3 v3.8.0
-	github.com/tiantour/conf v1.9.0
+	github.com/mediocregopher/radix/v4 v4.0.0
+	github.com/tiantour/conf v1.9.5
 )
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
-	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect
+	github.com/tilinna/clock v1.0.2 // indirect
 )

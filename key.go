@@ -1,5 +1,7 @@
 package cache
 
+import "github.com/mediocregopher/radix/v4"
+
 // Key key
 type Key struct{}
 
@@ -25,7 +27,7 @@ O(N)， N 为被删除的 key 的数量。
 被删除 key 的数量。
 */
 func (k *Key) DEL(result interface{}, key ...string) error {
-	return operateS(result, "DEL", key...)
+	return do(radix.Cmd(result, "DEL", key...))
 }
 
 /*
@@ -50,7 +52,7 @@ RDB 版本会被编码在序列化值当中，如果因为 Redis 的版本不同
 否则，返回序列化之后的值。
 */
 func (k *Key) DUMP(result interface{}, key string) error {
-	return operate(result, "DUMP", key)
+	return do(radix.Cmd(result, "DUMP", key))
 }
 
 /*
@@ -66,7 +68,7 @@ O(1)
 若 key 存在，返回 1 ，否则返回 0 。
 */
 func (k *Key) EXISTS(result interface{}, key string) error {
-	return operate(result, "EXISTS", key)
+	return do(radix.Cmd(result, "EXISTS", key))
 }
 
 /*
@@ -107,7 +109,7 @@ O(1)
 当 key 不存在或者不能为 key 设置生存时间时(比如在低于 2.1.3 版本的 Redis 中你尝试更新 key 的生存时间)，返回 0
 */
 func (k *Key) EXPIRE(result interface{}, key string, seconds int) error {
-	return operate(result, "EXPIRE", key, seconds)
+	return do(radix.FlatCmd(result, "EXPIRE", key, seconds))
 }
 
 /*
@@ -126,7 +128,7 @@ O(1)
 当 key 不存在或没办法设置生存时间，返回 0 。
 */
 func (k *Key) EXPIREAT(result interface{}, key string, timestamp int) error {
-	return operate(result, "EXPIREAT", key, timestamp)
+	return do(radix.FlatCmd(result, "EXPIREAT", key, timestamp))
 }
 
 /*
@@ -150,7 +152,7 @@ O(N)， N 为数据库中 key 的数量。
 
 */
 func (k *Key) KEYS(result interface{}, pattern string) error {
-	return operate(result, "KEYS", pattern)
+	return do(radix.Cmd(result, "KEYS", pattern))
 }
 
 /*
@@ -187,7 +189,7 @@ key 数据在两个实例之间传输的复杂度为 O(N) 。
 迁移成功时返回 OK ，否则返回相应的错误。
 */
 func (k *Key) MIGRATE(result interface{}, host, prot, key string, destinationDB, timeout int, args ...interface{}) error {
-	return operate(result, "MIGRATE", host, prot, key, destinationDB, timeout, args)
+	return do(radix.FlatCmd(result, "MIGRATE", host, prot, key, destinationDB, timeout, args))
 }
 
 /*
@@ -207,7 +209,7 @@ O(1)
 移动成功返回 1 ，失败则返回 0 。
 */
 func (k *Key) MOVE(result interface{}, key string, db int) error {
-	return operate(result, "MOVE", key, db)
+	return do(radix.FlatCmd(result, "MOVE", key, db))
 }
 
 /*
@@ -238,7 +240,7 @@ REFCOUNT 和 IDLETIME 返回数字。
 ENCODING 返回相应的编码类型。
 */
 func (k *Key) OBJECT(result interface{}, subcommand string, args ...interface{}) error {
-	return operate(result, "OBJECT", subcommand, args)
+	return do(radix.FlatCmd(result, "OBJECT", subcommand, args))
 }
 
 /*
@@ -255,7 +257,7 @@ O(1)
 如果 key 不存在或 key 没有设置生存时间，返回 0 。
 */
 func (k *Key) PERSIST(result interface{}, key string) error {
-	return operate(result, "PERSIST", key)
+	return do(radix.Cmd(result, "PERSIST", key))
 }
 
 /*
@@ -272,7 +274,7 @@ O(1)
 key 不存在或设置失败，返回 0
 */
 func (k *Key) PEXPIRE(result interface{}, key string, milliseconds int) error {
-	return operate(result, "PEXPIRE", key, milliseconds)
+	return do(radix.FlatCmd(result, "PEXPIRE", key, milliseconds))
 }
 
 /*
@@ -290,7 +292,7 @@ O(1)
 
 */
 func (k *Key) PEXPIREAT(result interface{}, key string, millisecondsTimestamp int) error {
-	return operate(result, "PEXPIREAT", key, millisecondsTimestamp)
+	return do(radix.FlatCmd(result, "PEXPIREAT", key, millisecondsTimestamp))
 }
 
 /*
@@ -310,7 +312,7 @@ O(1)
 
 */
 func (k *Key) PTTL(result interface{}, key string) error {
-	return operate(result, "PTTL", key)
+	return do(radix.Cmd(result, "PTTL", key))
 }
 
 /*
@@ -325,7 +327,7 @@ O(1)
 当数据库为空时，返回 nil 。
 */
 func (k *Key) RANDOMKEY(result interface{}) error {
-	return operateS(result, "RANDOMKEY")
+	return do(radix.Cmd(result, "RANDOMKEY"))
 }
 
 /*
@@ -345,7 +347,7 @@ O(1)
 改名成功时提示 OK ，失败时候返回一个错误。
 */
 func (k *Key) RENAME(result interface{}, key, newKey string) error {
-	return operate(result, "RENAME", key, newKey)
+	return do(radix.Cmd(result, "RENAME", key, newKey))
 }
 
 /*
@@ -364,7 +366,7 @@ O(1)
 如果 newkey 已经存在，返回 0 。
 */
 func (k *Key) RENAMENX(result interface{}, key, newKey string) error {
-	return operate(result, "RENAMENX", key, newKey)
+	return do(radix.Cmd(result, "RENAMENX", key, newKey))
 }
 
 /*
@@ -390,7 +392,7 @@ RESTORE 在执行反序列化之前会先对序列化值的 RDB 版本和数据�
 如果反序列化成功那么返回 OK ，否则返回一个错误。
 */
 func (k *Key) RESTORE(result interface{}, key string, ttl int, serializedValue string, args ...interface{}) error {
-	return operate(result, "RESTORE", key, ttl, serializedValue, args)
+	return do(radix.FlatCmd(result, "RESTORE", key, ttl, serializedValue, args))
 }
 
 /*
@@ -408,7 +410,7 @@ SORT key DESC 返回键值从大到小排序的结果。
 假设 today_cost 列表保存了今日的开销金额， 那么可以用 SORT 命令对它进行排序：
 */
 func (k *Key) SORT(result interface{}, key string, args ...interface{}) error {
-	return operate(result, "SORT", key, args)
+	return do(radix.FlatCmd(result, "SORT", key, args))
 }
 
 /*
@@ -427,7 +429,7 @@ O(1)
 在 Redis 2.8 以前，当 key 不存在，或者 key 没有设置剩余生存时间时，命令都返回 -1 。
 */
 func (k *Key) TTL(result interface{}, key string) error {
-	return operate(result, "TTL", key)
+	return do(radix.Cmd(result, "TTL", key))
 }
 
 /*
@@ -448,7 +450,7 @@ zset (有序集)
 hash (哈希表)
 */
 func (k *Key) TYPE(result interface{}, key string) error {
-	return operate(result, "TYPE", key)
+	return do(radix.Cmd(result, "TYPE", key))
 }
 
 /*
@@ -475,5 +477,5 @@ SCAN 命令是一个基于游标的迭代器（cursor based iterator）： SCAN 
 
 */
 func (k *Key) SCAN(result interface{}, key string, cursor int, args interface{}) error {
-	return operate(result, "SCAN", key, cursor, args)
+	return do(radix.FlatCmd(result, "SCAN", key, cursor, args))
 }

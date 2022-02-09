@@ -1,5 +1,7 @@
 package cache
 
+import "github.com/mediocregopher/radix/v4"
+
 // String string
 type String struct{}
 
@@ -23,7 +25,7 @@ APPEND key value
 追加 value 之后， key 中字符串的长度。
 */
 func (s *String) APPEND(result interface{}, key string, value interface{}) error {
-	return operate(result, "APPEND", key, value)
+	return do(radix.FlatCmd(result, "APPEND", key, value))
 }
 
 /*
@@ -45,7 +47,7 @@ O(N)
 被设置为 1 的位的数量。
 */
 func (s *String) BITCOUNT(result interface{}, key string, args ...interface{}) error {
-	return operate(result, "BITCOUNT", key, args)
+	return do(radix.FlatCmd(result, "BITCOUNT", key, args))
 }
 
 /*
@@ -76,7 +78,7 @@ O(N)
 BITOP 的复杂度为 O(N) ，当处理大型矩阵(matrix)或者进行大数据量的统计时，最好将任务指派到附属节点(slave)进行，避免阻塞主节点。
 */
 func (s *String) BITOP(result interface{}, operation, destKey string, key ...string) error {
-	return operate(result, "BITOP", operation, destKey, key)
+	return do(radix.FlatCmd(result, "BITOP", operation, destKey, key))
 }
 
 /*
@@ -87,7 +89,7 @@ BITFIELD 命令可以将一个 Redis 字符串看作是一个由二进制位组�
 BITFIELD 命令可以在一次调用中同时对多个位范围进行操作： 它接受一系列待执行的操作作为参数， 并返回一个数组作为回复， 数组中的每个元素就是对应操作的执行结果。
 */
 func (s *String) BITFIELD(result interface{}, key string, args ...interface{}) error {
-	return operate(result, "BITFIELD", key, args)
+	return do(radix.FlatCmd(result, "BITFIELD", key, args))
 }
 
 /*
@@ -111,7 +113,7 @@ O(1)
 执行 DECR 命令之后 key 的值。
 */
 func (s *String) DECR(result interface{}, key string) error {
-	return operate(result, "DECR", key)
+	return do(radix.Cmd(result, "DECR", key))
 }
 
 /*
@@ -135,7 +137,7 @@ O(1)
 减去 decrement 之后， key 的值。
 */
 func (s *String) DECRBY(result interface{}, key string, decrement int) error {
-	return operate(result, "DECRBY", key, decrement)
+	return do(radix.FlatCmd(result, "DECRBY", key, decrement))
 }
 
 /*
@@ -156,7 +158,7 @@ O(1)
 如果 key 不是字符串类型，那么返回一个错误。
 */
 func (s *String) GET(result interface{}, key string) error {
-	return operate(result, "GET", key)
+	return do(radix.Cmd(result, "GET", key))
 }
 
 /*
@@ -174,7 +176,7 @@ O(1)
 字符串值指定偏移量上的位(bit)。
 */
 func (s *String) GETBIT(result interface{}, key string, offset int) error {
-	return operate(result, "GETBIT", key, offset)
+	return do(radix.FlatCmd(result, "GETBIT", key, offset))
 }
 
 /*
@@ -196,7 +198,7 @@ O(N)， N 为要返回的字符串的长度。
 截取得出的子字符串。
 */
 func (s *String) GETRANGE(result interface{}, key string, start, stop int) error {
-	return operate(result, "GETRANGE", key, start, stop)
+	return do(radix.FlatCmd(result, "GETRANGE", key, start, stop))
 }
 
 /*
@@ -215,7 +217,7 @@ O(1)
 当 key 没有旧值时，也即是， key 不存在时，返回 nil 。
 */
 func (s *String) GETSET(result interface{}, key string, value interface{}) error {
-	return operate(result, "GETSET", key, value)
+	return do(radix.FlatCmd(result, "GETSET", key, value))
 }
 
 /*
@@ -238,7 +240,7 @@ O(1)
 执行 INCR 命令之后 key 的值。
 */
 func (s *String) INCR(result interface{}, key string) error {
-	return operate(result, "INCR", key)
+	return do(radix.Cmd(result, "INCR", key))
 }
 
 /*
@@ -262,7 +264,7 @@ O(1)
 加上 increment 之后， key 的值
 */
 func (s *String) INCRBY(result interface{}, key string, increment int) error {
-	return operate(result, "INCRBY", key, increment)
+	return do(radix.FlatCmd(result, "INCRBY", key, increment))
 }
 
 /*
@@ -290,7 +292,7 @@ O(1)
 执行命令之后 key 的值。
 */
 func (s *String) INCRBYFLOAT(result interface{}, key string, increment float64) error {
-	return operate(result, "INCRBYFLOAT", key, increment)
+	return do(radix.FlatCmd(result, "INCRBYFLOAT", key, increment))
 }
 
 /*
@@ -308,7 +310,7 @@ O(N) , N 为给定 key 的数量。
 一个包含所有给定 key 的值的列表。
 */
 func (s *String) MGET(result interface{}, key ...string) error {
-	return operateS(result, "MGET", key...)
+	return do(radix.Cmd(result, "MGET", key...))
 }
 
 /*
@@ -328,7 +330,7 @@ O(N)， N 为要设置的 key 数量。
 总是返回 OK (因为 MSET 不可能失败)
 */
 func (s *String) MSET(result interface{}, args ...string) error {
-	return operateS(result, "MSET", args...)
+	return do(radix.Cmd(result, "MSET", args...))
 }
 
 /*
@@ -349,7 +351,7 @@ O(N)， N 为要设置的 key 的数量。
 如果所有给定 key 都设置失败(至少有一个 key 已经存在)，那么返回 0 。
 */
 func (s *String) MSETNX(result interface{}, args ...string) error {
-	return operateS(result, "MSETNX", args...)
+	return do(radix.Cmd(result, "MSETNX", args...))
 }
 
 /*
@@ -365,7 +367,7 @@ O(1)
 设置成功时返回 OK 。
 */
 func (s *String) PSETEX(result interface{}, key string, milliseconds int, value interface{}) error {
-	return operate(result, "PSETEX", key, milliseconds, value)
+	return do(radix.FlatCmd(result, "PSETEX", key, milliseconds, value))
 }
 
 /*
@@ -397,7 +399,7 @@ O(1)
 如果设置了 NX 或者 XX ，但因为条件没达到而造成设置操作未执行，那么命令返回空批量回复（NULL Bulk Reply）。
 */
 func (s *String) SET(result interface{}, key string, value interface{}, args ...interface{}) error {
-	return operate(result, "SET", key, value, args)
+	return do(radix.FlatCmd(result, "SET", key, value, args))
 }
 
 /*
@@ -422,7 +424,7 @@ O(1)
 指定偏移量原来储存的位。
 */
 func (s *String) SETBIT(result interface{}, key string, offset, value int) error {
-	return operate(result, "SETBIT", key, offset, value)
+	return do(radix.FlatCmd(result, "SETBIT", key, offset, value))
 }
 
 /*
@@ -447,7 +449,7 @@ O(1)
 当 seconds 参数不合法时，返回一个错误。
 */
 func (s *String) SETEX(result interface{}, key string, seconds int, value interface{}) error {
-	return operate(result, "SETEX", key, seconds, value)
+	return do(radix.FlatCmd(result, "SETEX", key, seconds, value))
 }
 
 /*
@@ -468,7 +470,7 @@ O(1)
 设置失败，返回 0 。
 */
 func (s *String) SETNX(result interface{}, key string, value interface{}) error {
-	return operate(result, "SETNX", key, value)
+	return do(radix.FlatCmd(result, "SETNX", key, value))
 }
 
 /*
@@ -492,7 +494,7 @@ SETRANGE 命令会确保字符串足够长以便将 value 设置在指定的偏�
 被 SETRANGE 修改之后，字符串的长度。
 */
 func (s *String) SETRANGE(result interface{}, key string, offset int, value interface{}) error {
-	return operate(result, "SETRANGE", key, offset, value)
+	return do(radix.FlatCmd(result, "SETRANGE", key, offset, value))
 }
 
 /*
@@ -511,5 +513,5 @@ O(1)
 当 key 不存在时，返回 0 。
 */
 func (s *String) STRLEN(result interface{}, key string) error {
-	return operate(result, "STRLEN", key)
+	return do(radix.Cmd(result, "STRLEN", key))
 }
