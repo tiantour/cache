@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/mediocregopher/radix/v4 v4.0.0
-	github.com/tiantour/conf v1.9.5
+	github.com/tiantour/conf v1.9.7
 )
 
 require (

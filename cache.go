@@ -19,7 +19,8 @@ func do(args radix.Action) error {
 	client, err := (radix.PoolConfig{}).New(ctx, "tcp", address)
 	if err != nil {
 		log.Fatalf("open cache err: %v", err)
-		defer client.Close()
 	}
+	defer client.Close()
+
 	return client.Do(ctx, args)
 }
