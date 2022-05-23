@@ -2,27 +2,21 @@ package cache
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
 	"github.com/mediocregopher/radix/v4"
-	"github.com/tiantour/conf"
 )
 
-var (
-	client  radix.Client
-	address = fmt.Sprintf("%s%s", conf.NewCache().Data.IP, conf.NewCache().Data.Port)
-)
+var client radix.Client
 
-func init() {
+func New(Network, Address string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	var err error
-	client, err = (radix.PoolConfig{}).New(ctx, "tcp", address)
+	client, err = (radix.PoolConfig{}).New(ctx, Network, Address)
 	if err != nil {
-		defer client.Close()
 		log.Fatalf("open cache err: %v", err)
 	}
 }
